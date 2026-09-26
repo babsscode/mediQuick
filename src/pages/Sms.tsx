@@ -204,66 +204,9 @@ function Sms() {
     return (
         <div className="min-h-screen bg-gray-50">
 
-            {/* SIDEBAR */}
-
-            <aside className="fixed left-0 top-0 hidden h-screen w-64 border-r border-gray-200 bg-white lg:block">
-
-                <div className="flex h-full flex-col">
-
-                    <div className="px-6 py-8">
-                        <div className="text-xl font-bold tracking-tight text-gray-900">
-                            IMPIRICUS
-                        </div>
-                    </div>
-
-                    <nav className="flex-1 px-4">
-
-                        <Link
-                            to="/app"
-                            className="mb-2 flex items-center gap-3 rounded-xl bg-gray-100 px-4 py-3 text-sm font-medium text-gray-900"
-                        >
-                            <span>✉</span>
-                            Messages
-                        </Link>
-
-                        <Link
-                            to="/app/discussion"
-                            className="mb-2 flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
-                        >
-                            <span>◉</span>
-                            Discussion
-                        </Link>
-
-                        <a
-                            href="#"
-                            className="mb-2 flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
-                        >
-                            <span>♡</span>
-                            Saved
-                        </a>
-
-                    </nav>
-
-                    <div className="border-t border-gray-100 p-4">
-
-                        <a
-                            href="#"
-                            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
-                        >
-                            <span>⚙</span>
-                            Settings
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </aside>
-
-
             {/* MAIN CONTENT */}
 
-            <main className="lg:ml-64">
+            <main>
 
                 {/* TOP BAR */}
 
