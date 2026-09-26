@@ -1,4 +1,12 @@
-import { useMemo, useState } from "react";
+import {
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
+
+import {
+    useSearchParams,
+} from "react-router-dom";
 
 import type {
     PeerConversation,
@@ -107,8 +115,12 @@ function getRecommendedDoctors(
         doctor.interests.forEach((interest) => {
             analysis.topics.forEach((topic) => {
                 if (
-                    interest.toLowerCase().includes(topic.toLowerCase()) ||
-                    topic.toLowerCase().includes(interest.toLowerCase())
+                    interest.toLowerCase().includes(
+                        topic.toLowerCase()
+                    ) ||
+                    topic.toLowerCase().includes(
+                        interest.toLowerCase()
+                    )
                 ) {
                     score += 4;
                 }
@@ -122,7 +134,11 @@ function getRecommendedDoctors(
 
         doctor.interests.forEach((interest) => {
             questionWords.forEach((word) => {
-                if (interest.toLowerCase().includes(word)) {
+                if (
+                    interest
+                        .toLowerCase()
+                        .includes(word)
+                ) {
                     score += 1;
                 }
             });
@@ -141,7 +157,10 @@ function getRecommendedDoctors(
 }
 
 function PeerConnect() {
-    const [viewMode, setViewMode] = useState<ViewMode>("chats");
+    const [searchParams] = useSearchParams();
+
+    const [viewMode, setViewMode] =
+        useState<ViewMode>("chats");
 
     const [conversations, setConversations] =
         useState<PeerConversation[]>(sampleConversations);
@@ -173,6 +192,22 @@ function PeerConnect() {
 
     const currentUserSpecialty = "Cardiology";
     const currentUserLocation = "Atlanta, GA";
+
+    /*
+     * Open the New Question modal when a question
+     * is passed from the Dashboard.
+     */
+    useEffect(() => {
+        const questionFromDashboard =
+            searchParams.get("question");
+
+        if (!questionFromDashboard) {
+            return;
+        }
+
+        setQuestion(questionFromDashboard);
+        setShowNewQuestion(true);
+    }, [searchParams]);
 
     const pendingRequests = useMemo(() => {
         return requests.filter(
@@ -210,7 +245,9 @@ function PeerConnect() {
     function toggleDoctor(doctorId: string) {
         setSelectedDoctors((current) => {
             if (current.includes(doctorId)) {
-                return current.filter((id) => id !== doctorId);
+                return current.filter(
+                    (id) => id !== doctorId
+                );
             }
 
             if (current.length >= 3) {
@@ -365,6 +402,7 @@ function PeerConnect() {
                     <h1 className="text-3xl font-semibold text-gray-900">
                         Peer Connect
                     </h1>
+
                     <p className="mt-1 text-sm text-gray-500">
                         Connect with relevant HCPs around
                         specific clinical questions.
@@ -396,6 +434,7 @@ function PeerConnect() {
                                 }`}
                             >
                                 Requests
+
                                 {pendingRequests.length > 0 && (
                                     <span className="ml-2 rounded-full bg-gray-900 px-2 py-0.5 text-xs text-white">
                                         {pendingRequests.length}
@@ -666,6 +705,7 @@ function ConversationPanel({
                         <h2 className="font-semibold text-gray-900">
                             {conversation.doctorName}
                         </h2>
+
                         <p className="text-sm text-gray-400">
                             {conversation.specialty} ·{" "}
                             {conversation.location}

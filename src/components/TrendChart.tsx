@@ -30,8 +30,8 @@ function TrendChart({
     engagementData,
 }: TrendChartProps) {
     return (
-        <div className="space-y-6">
-            <div className="rounded-2xl border border-gray-200 bg-white p-5">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5">
                 <h3 className="mb-1 text-base font-semibold text-gray-900">
                     Topics You're Engaging With
                 </h3>

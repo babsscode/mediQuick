@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 
 import InfoCard from "../components/InfoCard";
-import TrendChart from "../components/TrendChart";
 
 import {
     sampleHcpActivity,
@@ -148,7 +147,7 @@ function Information() {
                 </div>
 
                 {/* Main layout */}
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.3fr]">
+                <div>
 
                     {/* Information grid */}
                     <section>
@@ -178,41 +177,6 @@ function Information() {
                         </div>
                     </section>
 
-                    {/* Specialty Pulse */}
-                    <aside>
-                        <div className="sticky top-6">
-
-                            <div className="mb-5 rounded-2xl border border-gray-200 bg-white p-5">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
-                                            Your Specialty Pulse
-                                        </p>
-
-                                        <h2 className="mt-1 text-2xl font-semibold text-gray-900">
-                                            {hcpActivity.specialty}
-                                        </h2>
-                                    </div>
-
-                                    <div className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-                                        Personalized
-                                    </div>
-                                </div>
-
-                                <p className="mt-4 text-sm leading-6 text-gray-500">
-                                    Your pulse is based on recent searches,
-                                    content views, saved resources, and
-                                    topics you've interacted with.
-                                </p>
-                            </div>
-
-                            <TrendChart
-                                topicData={topicData}
-                                engagementData={engagementData}
-                            />
-
-                        </div>
-                    </aside>
                 </div>
             </div>
 
