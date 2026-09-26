@@ -12,6 +12,7 @@ import { auth } from "../firebase/auth";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Sms from "../pages/Sms";
+import "../index.css";
 import DiscussionPage from "../pages/DiscussionPage";
 
 function ProtectedRoute({

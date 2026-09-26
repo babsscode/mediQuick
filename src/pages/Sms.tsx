@@ -201,52 +201,60 @@ function Sms() {
             </div>
         );
     }
-
-
     return (
-        <div className="app">
+        <div className="min-h-screen bg-gray-50">
 
             {/* SIDEBAR */}
 
-            <aside className="sidebar">
+            <aside className="fixed left-0 top-0 hidden h-screen w-64 border-r border-gray-200 bg-white lg:block">
 
-                <div className="logo">
-                    IMPIRICUS
-                </div>
+                <div className="flex h-full flex-col">
 
-                <nav>
+                    <div className="px-6 py-8">
+                        <div className="text-xl font-bold tracking-tight text-gray-900">
+                            IMPIRICUS
+                        </div>
+                    </div>
 
-                    <Link to="/app/discussion">
-                        Discussion
-                    </Link>
+                    <nav className="flex-1 px-4">
 
-                    <a
-                        className="nav-item"
-                        href="#"
-                    >
-                        <span>◉</span>
-                        Dashboard
-                    </a>
+                        <Link
+                            to="/app"
+                            className="mb-2 flex items-center gap-3 rounded-xl bg-gray-100 px-4 py-3 text-sm font-medium text-gray-900"
+                        >
+                            <span>✉</span>
+                            Messages
+                        </Link>
 
-                    <a
-                        className="nav-item"
-                        href="#"
-                    >
-                        <span>♡</span>
-                        Saved
-                    </a>
+                        <Link
+                            to="/app/discussion"
+                            className="mb-2 flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
+                        >
+                            <span>◉</span>
+                            Discussion
+                        </Link>
 
-                </nav>
+                        <a
+                            href="#"
+                            className="mb-2 flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
+                        >
+                            <span>♡</span>
+                            Saved
+                        </a>
 
-                <div className="sidebar-bottom">
+                    </nav>
 
-                    <a
-                        className="nav-item"
-                        href="#"
-                    >
-                        <span>⚙</span>
-                        Settings
-                    </a>
+                    <div className="border-t border-gray-100 p-4">
+
+                        <a
+                            href="#"
+                            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
+                        >
+                            <span>⚙</span>
+                            Settings
+                        </a>
+
+                    </div>
 
                 </div>
 
@@ -255,82 +263,78 @@ function Sms() {
 
             {/* MAIN CONTENT */}
 
-            <main className="main">
+            <main className="lg:ml-64">
 
                 {/* TOP BAR */}
 
-                <header className="top-bar">
+                <header className="border-b border-gray-200 bg-white px-6 py-6 lg:px-10">
 
-                    <div className="page-title">
+                    <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
 
-                        <h1>
-                            SMS Messages
-                        </h1>
+                        <div>
+                            <h1 className="m-0 text-3xl font-bold tracking-tight text-gray-900">
+                                SMS Messages
+                            </h1>
 
-                        <p>
-                            Your Impiricus communications
-                        </p>
+                            <p className="mt-1 text-sm text-gray-500">
+                                Your Impiricus communications
+                            </p>
+                        </div>
 
-                    </div>
 
+                        {/* SEARCH */}
 
-                    {/* SEARCH */}
+                        <div className="relative w-full xl:w-96">
 
-                    <div className="search-container">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                ⌕
+                            </span>
 
-                        <span className="search-icon">
-                            ⌕
-                        </span>
-
-                        <input
-                            type="text"
-                            placeholder="Search messages..."
-                            value={search}
-                            onChange={(event) =>
-                                setSearch(
-                                    event.target.value
-                                )
-                            }
-                        />
-
-                        {search && (
-                            <button
-                                type="button"
-                                className="clear-search"
-                                onClick={() =>
-                                    setSearch("")
+                            <input
+                                type="text"
+                                placeholder="Search messages..."
+                                value={search}
+                                onChange={(event) =>
+                                    setSearch(event.target.value)
                                 }
-                                aria-label="Clear search"
-                            >
-                                ×
-                            </button>
-                        )}
+                                className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-11 pr-10 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:bg-white"
+                            />
 
-                    </div>
-
-
-                    {/* PROFILE */}
-
-                    <div className="profile">
-
-                        <div className="profile-avatar">
-
-                            {user.displayName
-                                ? user.displayName.charAt(0)
-                                : "H"}
+                            {search && (
+                                <button
+                                    type="button"
+                                    onClick={() => setSearch("")}
+                                    aria-label="Clear search"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-400 hover:text-gray-700"
+                                >
+                                    ×
+                                </button>
+                            )}
 
                         </div>
 
-                        <div>
 
-                            <strong>
-                                {user.displayName ||
-                                    "Healthcare Professional"}
-                            </strong>
+                        {/* PROFILE */}
 
-                            <span>
-                                HCP
-                            </span>
+                        <div className="flex items-center gap-3">
+
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">
+                                {user.displayName
+                                    ? user.displayName.charAt(0).toUpperCase()
+                                    : "H"}
+                            </div>
+
+                            <div className="hidden xl:block">
+
+                                <p className="text-sm font-semibold text-gray-900">
+                                    {user.displayName || "Healthcare Professional"}
+                                </p>
+
+                                <p className="text-xs text-gray-500">
+                                    HCP
+                                </p>
+
+                            </div>
 
                         </div>
 
@@ -339,106 +343,109 @@ function Sms() {
                 </header>
 
 
-                {/* FILTER BAR */}
+                {/* CONTENT */}
 
-                <section className="filter-section">
+                <div className="px-6 py-8 lg:px-10">
 
-                    <div className="filter-label">
-                        Filter by
-                    </div>
+                    {/* FILTER BAR */}
 
+                    <section className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-                    {/* DATE FILTER */}
+                        <div className="flex items-center gap-3">
 
-                    <select
-                        value={selectedDate}
-                        onChange={(event) =>
-                            setSelectedDate(
-                                event.target.value
-                            )
-                        }
-                    >
-                        <option value="All">
-                            Any date
-                        </option>
+                            <span className="text-sm font-medium text-gray-700">
+                                Filter by
+                            </span>
 
-                        <option value="7">
-                            Last 7 days
-                        </option>
+                            <select
+                                value={selectedDate}
+                                onChange={(event) =>
+                                    setSelectedDate(event.target.value)
+                                }
+                                className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 outline-none focus:border-gray-400"
+                            >
+                                <option value="All">
+                                    Any date
+                                </option>
 
-                        <option value="30">
-                            Last 30 days
-                        </option>
+                                <option value="7">
+                                    Last 7 days
+                                </option>
 
-                        <option value="90">
-                            Last 90 days
-                        </option>
+                                <option value="30">
+                                    Last 30 days
+                                </option>
 
-                    </select>
+                                <option value="90">
+                                    Last 90 days
+                                </option>
 
+                            </select>
 
-                    {/* MESSAGE COUNT */}
-
-                    <div className="message-count">
-
-                        {filteredMessages.length}{" "}
-
-                        {filteredMessages.length === 1
-                            ? "message"
-                            : "messages"}
-
-                    </div>
-
-                </section>
-
-
-                {/* MESSAGE GRID */}
-
-                <section className="messages-container">
-
-                    {loading ? (
-
-                        <div className="empty-state">
-                            Loading messages...
                         </div>
 
-                    ) : filteredMessages.length === 0 ? (
 
-                        <div className="empty-state">
+                        <div className="text-sm text-gray-500">
 
-                            <div className="empty-icon">
-                                ✉
+                            <span className="font-semibold text-gray-900">
+                                {filteredMessages.length}
+                            </span>{" "}
+
+                            {filteredMessages.length === 1
+                                ? "message"
+                                : "messages"}
+
+                        </div>
+
+                    </section>
+
+
+                    {/* MESSAGE GRID */}
+
+                    <section>
+
+                        {loading ? (
+
+                            <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center text-sm text-gray-500">
+                                Loading messages...
                             </div>
 
-                            <h2>
-                                No messages found
-                            </h2>
+                        ) : filteredMessages.length === 0 ? (
 
-                            <p>
-                                Try changing your search
-                                or filters.
-                            </p>
+                            <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center">
 
-                        </div>
+                                <div className="mb-4 text-4xl">
+                                    ✉
+                                </div>
 
-                    ) : (
+                                <h2 className="mb-2 text-xl font-semibold text-gray-900">
+                                    No messages found
+                                </h2>
 
-                        <div className="sms-grid">
+                                <p className="text-sm text-gray-500">
+                                    Try changing your search or filters.
+                                </p>
 
-                            {filteredMessages.map(
-                                (message) => (
+                            </div>
+
+                        ) : (
+
+                            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+
+                                {filteredMessages.map((message) => (
                                     <SmsCard
                                         key={message.id}
                                         message={message}
                                     />
-                                )
-                            )}
+                                ))}
 
-                        </div>
+                            </div>
 
-                    )}
+                        )}
 
-                </section>
+                    </section>
+
+                </div>
 
             </main>
 
