@@ -7,11 +7,12 @@ import {
 } from "react-router-dom";
 import { onAuthStateChanged, type User } from "firebase/auth";
 
-import { auth } from "./firebase/auth";
+import { auth } from "../firebase/auth";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Sms from "./pages/sms";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import Sms from "../pages/Sms";
+import DiscussionPage from "../pages/DiscussionPage";
 
 function ProtectedRoute({
   user,
@@ -106,6 +107,15 @@ function App() {
           element={
             <ProtectedRoute user={user} loading={loading}>
               <Sms />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/app/discussion"
+          element={
+            <ProtectedRoute user={user} loading={loading}>
+              <DiscussionPage />
             </ProtectedRoute>
           }
         />
