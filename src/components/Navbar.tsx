@@ -40,7 +40,7 @@ function Navbar() {
                             }`
                         }
                     >
-                        SMS Messages
+                        Resources
                     </NavLink>
 
                                         <NavLink
