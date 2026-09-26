@@ -21,11 +21,26 @@ const recommendedQuestions = [
     },
 ];
 
+type MslMessage = {
+    sender: "hcp" | "ascend";
+    text: string;
+};
+
 function Dashboard() {
     const navigate = useNavigate();
 
     const [search, setSearch] = useState("");
     const [searchedQuestion, setSearchedQuestion] = useState("");
+    const [showMslModal, setShowMslModal] = useState(false);
+    const [mslMessage, setMslMessage] = useState("");
+
+    const [mslMessages, setMslMessages] = useState<MslMessage[]>([
+        {
+            sender: "ascend",
+            text:
+                "Hi! I'm Ascend. I can help connect you with an MSL or help you find relevant medical information.",
+        },
+    ]);
 
     const topicData = [
         {
@@ -97,8 +112,49 @@ function Dashboard() {
         );
     }
 
+    function handleResources() {
+        navigate("/app/sms");
+    }
+
+    function handleMsl() {
+        setShowMslModal(true);
+    }
+
+    function handleSendMslMessage() {
+        if (!mslMessage.trim()) {
+            return;
+        }
+
+        const newMessage: MslMessage = {
+            sender: "hcp",
+            text: mslMessage.trim(),
+        };
+
+        setMslMessages((currentMessages) => [
+            ...currentMessages,
+            newMessage,
+        ]);
+
+        setMslMessage("");
+    }
+
+    function handleQuickAction(action: string) {
+        setMslMessages((currentMessages) => [
+            ...currentMessages,
+            {
+                sender: "hcp",
+                text: action,
+            },
+        ]);
+    }
+
     function handleRecommendedQuestion(question: string) {
         setSearch(question);
+    }
+
+    function closeMslModal() {
+        setShowMslModal(false);
+        setMslMessage("");
     }
 
     return (
@@ -191,43 +247,34 @@ function Dashboard() {
 
                 {/* ACTIONS */}
                 {searchedQuestion && (
-                    <div className="mt-10">
+                    <div className="mt-10 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
 
-                        <div className="mb-4">
-                            <h2 className="text-lg font-semibold text-gray-900">
-                                Explore your question
-                            </h2>
+                        <div className="mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-900 text-sm text-white">
+                                    ✦
+                                </div>
 
-                            <p className="mt-1 text-sm text-gray-500">
-                                Choose how you want to explore
-                                what you are looking for.
-                            </p>
-                        </div>
+                                <div>
+                                    <h2 className="text-lg font-semibold text-gray-900">
+                                        What would you like to do?
+                                    </h2>
 
-                        {/* SEARCHED QUESTION */}
-                        <div className="mb-5 rounded-2xl border border-gray-200 bg-white px-5 py-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                                Your question
-                            </p>
-
-                            <p className="mt-2 text-sm font-medium text-gray-800">
-                                {searchedQuestion}
-                            </p>
+                                    <p className="mt-0.5 text-sm text-gray-500">
+                                        Choose how you'd like to explore your question.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 
                             {/* RESOURCES */}
                             <button
-                                onClick={() =>
-                                    console.log(
-                                        "Resources:",
-                                        searchedQuestion
-                                    )
-                                }
-                                className="group rounded-2xl border border-gray-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
+                                onClick={handleResources}
+                                className="group rounded-2xl border-2 border-gray-200 bg-gray-50 p-5 text-left transition hover:-translate-y-1 hover:border-gray-400 hover:bg-white hover:shadow-md"
                             >
-                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-lg">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
                                     📚
                                 </div>
 
@@ -241,7 +288,7 @@ function Dashboard() {
                                     for your question.
                                 </p>
 
-                                <p className="mt-4 text-xs font-semibold text-gray-400 group-hover:text-gray-700">
+                                <p className="mt-4 text-xs font-semibold text-gray-500 group-hover:text-gray-900">
                                     Explore resources →
                                 </p>
                             </button>
@@ -249,9 +296,9 @@ function Dashboard() {
                             {/* DISCUSSION */}
                             <button
                                 onClick={handleDiscussion}
-                                className="group rounded-2xl border border-gray-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
+                                className="group rounded-2xl border-2 border-gray-200 bg-gray-50 p-5 text-left transition hover:-translate-y-1 hover:border-gray-400 hover:bg-white hover:shadow-md"
                             >
-                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-lg">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
                                     💬
                                 </div>
 
@@ -264,7 +311,7 @@ function Dashboard() {
                                     discussing about this topic.
                                 </p>
 
-                                <p className="mt-4 text-xs font-semibold text-gray-400 group-hover:text-gray-700">
+                                <p className="mt-4 text-xs font-semibold text-gray-500 group-hover:text-gray-900">
                                     View discussions →
                                 </p>
                             </button>
@@ -272,9 +319,9 @@ function Dashboard() {
                             {/* PEER CONNECT */}
                             <button
                                 onClick={handlePeerConnect}
-                                className="group rounded-2xl border border-gray-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
+                                className="group rounded-2xl border-2 border-gray-200 bg-gray-50 p-5 text-left transition hover:-translate-y-1 hover:border-gray-400 hover:bg-white hover:shadow-md"
                             >
-                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-lg">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
                                     👥
                                 </div>
 
@@ -287,22 +334,17 @@ function Dashboard() {
                                     about a specific question.
                                 </p>
 
-                                <p className="mt-4 text-xs font-semibold text-gray-400 group-hover:text-gray-700">
+                                <p className="mt-4 text-xs font-semibold text-gray-500 group-hover:text-gray-900">
                                     Ask your peers →
                                 </p>
                             </button>
 
                             {/* MSL */}
                             <button
-                                onClick={() =>
-                                    console.log(
-                                        "MSL:",
-                                        searchedQuestion
-                                    )
-                                }
-                                className="group rounded-2xl border border-gray-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
+                                onClick={handleMsl}
+                                className="group rounded-2xl border-2 border-gray-200 bg-gray-50 p-5 text-left transition hover:-translate-y-1 hover:border-gray-400 hover:bg-white hover:shadow-md"
                             >
-                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-lg">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
                                     🩺
                                 </div>
 
@@ -316,7 +358,7 @@ function Dashboard() {
                                     direct conversation.
                                 </p>
 
-                                <p className="mt-4 text-xs font-semibold text-gray-400 group-hover:text-gray-700">
+                                <p className="mt-4 text-xs font-semibold text-gray-500 group-hover:text-gray-900">
                                     Connect with an MSL →
                                 </p>
                             </button>
@@ -324,7 +366,7 @@ function Dashboard() {
                     </div>
                 )}
 
-                {/* SPECIALTY PULSE GRAPHS */}
+                {/* SPECIALTY PULSE */}
                 <section className="mt-10">
                     <div className="mb-5">
                         <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
@@ -347,8 +389,162 @@ function Dashboard() {
                         engagementData={engagementData}
                     />
                 </section>
-
             </div>
+
+            {/* MSL / ASCEND MODAL */}
+            {showMslModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+                    <div className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
+
+                        {/* MODAL HEADER */}
+                        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-5">
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-900 text-lg text-white">
+                                    🩺
+                                </div>
+
+                                <div>
+                                    <h2 className="font-semibold text-gray-900">
+                                        Connect with an MSL
+                                    </h2>
+
+                                    <p className="text-xs text-gray-500">
+                                        Powered by Ascend
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={closeMslModal}
+                                className="flex h-9 w-9 items-center justify-center rounded-full text-xl text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
+                                aria-label="Close"
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        {/* CONVERSATION */}
+                        <div className="flex-1 space-y-4 overflow-y-auto bg-gray-50 px-6 py-6">
+
+                            {/* CURRENT QUESTION */}
+                            {searchedQuestion && (
+                                <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                        Your question
+                                    </p>
+
+                                    <p className="mt-2 text-sm leading-6 text-gray-700">
+                                        {searchedQuestion}
+                                    </p>
+                                </div>
+                            )}
+
+                            {mslMessages.map((message, index) => (
+                                <div
+                                    key={`${message.sender}-${index}`}
+                                    className={
+                                        message.sender === "hcp"
+                                            ? "flex justify-end"
+                                            : "flex justify-start"
+                                    }
+                                >
+                                    <div
+                                        className={
+                                            message.sender === "hcp"
+                                                ? "max-w-[80%] rounded-2xl rounded-br-md bg-gray-900 px-4 py-3 text-sm leading-6 text-white"
+                                                : "max-w-[80%] rounded-2xl rounded-bl-md border border-gray-200 bg-white px-4 py-3 text-sm leading-6 text-gray-700"
+                                        }
+                                    >
+                                        {message.text}
+                                    </div>
+                                </div>
+                            ))}
+
+                            {/* QUICK ACTIONS */}
+                            <div>
+                                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                    Quick actions
+                                </p>
+
+                                <div className="flex flex-wrap gap-2">
+                                    <button
+                                        onClick={() =>
+                                            handleQuickAction(
+                                                "I'd like to request scientific information related to my question."
+                                            )
+                                        }
+                                        className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-700 transition hover:border-gray-400"
+                                    >
+                                        Request scientific information
+                                    </button>
+
+                                    <button
+                                        onClick={() =>
+                                            handleQuickAction(
+                                                "I'd like to connect with an MSL who can discuss this topic."
+                                            )
+                                        }
+                                        className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-700 transition hover:border-gray-400"
+                                    >
+                                        Connect with an MSL
+                                    </button>
+
+                                    <button
+                                        onClick={() =>
+                                            handleQuickAction(
+                                                "Can you help me find relevant patient resources?"
+                                            )
+                                        }
+                                        className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-700 transition hover:border-gray-400"
+                                    >
+                                        Patient resources
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* MESSAGE INPUT */}
+                        <div className="border-t border-gray-200 bg-white p-4">
+                            <div className="flex items-end gap-3">
+                                <textarea
+                                    value={mslMessage}
+                                    onChange={(event) =>
+                                        setMslMessage(
+                                            event.target.value
+                                        )
+                                    }
+                                    onKeyDown={(event) => {
+                                        if (
+                                            event.key === "Enter" &&
+                                            !event.shiftKey
+                                        ) {
+                                            event.preventDefault();
+                                            handleSendMslMessage();
+                                        }
+                                    }}
+                                    placeholder="Ask Ascend or request to connect with an MSL..."
+                                    rows={2}
+                                    className="min-h-[52px] flex-1 resize-none rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-gray-400"
+                                />
+
+                                <button
+                                    onClick={handleSendMslMessage}
+                                    disabled={!mslMessage.trim()}
+                                    className="rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
+                                >
+                                    Send
+                                </button>
+                            </div>
+
+                            <p className="mt-2 text-center text-[11px] text-gray-400">
+                                Ascend connects HCPs with relevant
+                                resources and field or medical
+                                support.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import {
     collection,
     addDoc,
+    doc,
+    getDoc,
     onSnapshot,
     orderBy,
     query,
@@ -30,11 +32,17 @@ function DiscussionPage() {
     const [user, setUser] =
         useState<User | null>(null);
 
+    const [userRole, setUserRole] =
+        useState<string>("hcp");
+
     const [discussions, setDiscussions] =
         useState<Discussion[]>([]);
 
     const [selectedDiscussion, setSelectedDiscussion] =
         useState<Discussion | null>(null);
+
+    const [openedDiscussions, setOpenedDiscussions] =
+        useState<Discussion[]>([]);
 
     const [messages, setMessages] =
         useState<DiscussionMessage[]>([]);
@@ -51,17 +59,73 @@ function DiscussionPage() {
     const [sending, setSending] =
         useState(false);
 
+    const [sendError, setSendError] =
+        useState("");
+
 
     /*
-     * Get currently authenticated user.
+     * Get the currently signed-in user
+     * and their role from Firestore.
      */
     useEffect(() => {
 
         const unsubscribe =
             onAuthStateChanged(
                 auth,
-                (currentUser) => {
+                async (currentUser) => {
+
                     setUser(currentUser);
+
+                    if (!currentUser) {
+                        setUserRole("hcp");
+                        return;
+                    }
+
+                    try {
+
+                        const userRef =
+                            doc(
+                                db,
+                                "users",
+                                currentUser.uid
+                            );
+
+                        const userSnapshot =
+                            await getDoc(userRef);
+
+                        if (userSnapshot.exists()) {
+
+                            const userData =
+                                userSnapshot.data();
+
+                            if (
+                                typeof userData.role ===
+                                "string"
+                            ) {
+
+                                setUserRole(
+                                    userData.role.toLowerCase()
+                                );
+
+                            } else {
+
+                                setUserRole("hcp");
+                            }
+
+                        } else {
+
+                            setUserRole("hcp");
+                        }
+
+                    } catch (error) {
+
+                        console.error(
+                            "Error loading user role:",
+                            error
+                        );
+
+                        setUserRole("hcp");
+                    }
                 }
             );
 
@@ -71,11 +135,7 @@ function DiscussionPage() {
 
 
     /*
-     * Load discussions.
-     *
-     * Firestore:
-     *
-     * discussions/{discussionId}
+     * Load all discussions from Firestore.
      */
     useEffect(() => {
 
@@ -110,31 +170,77 @@ function DiscussionPage() {
 
                     setLoading(false);
 
-                    /*
-                     * Automatically select the
-                     * first discussion.
-                     */
                     setSelectedDiscussion(
                         (current) => {
 
+                            /*
+                             * Automatically open the first
+                             * discussion when the page loads.
+                             */
                             if (current === null) {
-                                return (
+
+                                const firstDiscussion =
                                     loadedDiscussions[0] ??
-                                    null
-                                );
+                                    null;
+
+                                if (firstDiscussion) {
+
+                                    setOpenedDiscussions(
+                                        (currentOpened) => {
+
+                                            const alreadyOpen =
+                                                currentOpened.some(
+                                                    (discussion) =>
+                                                        discussion.id ===
+                                                        firstDiscussion.id
+                                                );
+
+                                            if (alreadyOpen) {
+                                                return currentOpened;
+                                            }
+
+                                            return [
+                                                firstDiscussion,
+                                                ...currentOpened,
+                                            ];
+                                        }
+                                    );
+                                }
+
+                                return firstDiscussion;
                             }
 
                             /*
-                             * Update the selected
-                             * discussion with fresh
-                             * Firestore data.
+                             * Keep the currently selected
+                             * discussion updated if Firestore
+                             * changes its participant count.
                              */
-                            return (
+                            const updatedDiscussion =
                                 loadedDiscussions.find(
                                     (discussion) =>
                                         discussion.id ===
                                         current.id
-                                ) ?? null
+                                );
+
+                            if (updatedDiscussion) {
+
+                                setOpenedDiscussions(
+                                    (currentOpened) =>
+                                        currentOpened.map(
+                                            (discussion) =>
+                                                discussion.id ===
+                                                updatedDiscussion.id
+                                                    ? updatedDiscussion
+                                                    : discussion
+                                        )
+                                );
+
+                                return updatedDiscussion;
+                            }
+
+                            return (
+                                loadedDiscussions[0] ??
+                                null
                             );
                         }
                     );
@@ -156,11 +262,7 @@ function DiscussionPage() {
 
 
     /*
-     * Load messages for selected discussion.
-     *
-     * Firestore:
-     *
-     * discussions/{discussionId}/messages/{messageId}
+     * Load messages for the selected discussion.
      */
     useEffect(() => {
 
@@ -168,6 +270,8 @@ function DiscussionPage() {
             setMessages([]);
             return;
         }
+
+        setSendError("");
 
         const messagesRef =
             collection(
@@ -206,6 +310,10 @@ function DiscussionPage() {
                         "Error loading discussion messages:",
                         error
                     );
+
+                    setSendError(
+                        `Unable to load messages: ${error.message}`
+                    );
                 }
             );
 
@@ -215,7 +323,7 @@ function DiscussionPage() {
 
 
     /*
-     * Search discussions.
+     * Filter discussions using the search box.
      */
     const filteredDiscussions =
         useMemo(() => {
@@ -225,10 +333,6 @@ function DiscussionPage() {
                     .toLowerCase()
                     .trim();
 
-            /*
-             * No search:
-             * show popular discussions.
-             */
             if (searchText === "") {
 
                 return discussions.filter(
@@ -237,10 +341,6 @@ function DiscussionPage() {
                 );
             }
 
-            /*
-             * Search title,
-             * description and specialty.
-             */
             return discussions.filter(
                 (discussion) =>
                     discussion.title
@@ -263,7 +363,127 @@ function DiscussionPage() {
 
 
     /*
-     * Send a new HCP discussion message.
+     * Keep opened discussions in the sidebar
+     * even after switching to another discussion.
+     */
+    const sidebarDiscussions =
+        useMemo(() => {
+
+            const combined: Discussion[] = [];
+
+            openedDiscussions.forEach(
+                (discussion) => {
+
+                    const latestDiscussion =
+                        discussions.find(
+                            (item) =>
+                                item.id ===
+                                discussion.id
+                        );
+
+                    if (!latestDiscussion) {
+                        return;
+                    }
+
+                    if (search.trim() !== "") {
+
+                        const searchText =
+                            search
+                                .toLowerCase()
+                                .trim();
+
+                        const matchesSearch =
+                            latestDiscussion.title
+                                .toLowerCase()
+                                .includes(searchText) ||
+
+                            latestDiscussion.description
+                                .toLowerCase()
+                                .includes(searchText) ||
+
+                            latestDiscussion.specialty
+                                .toLowerCase()
+                                .includes(searchText);
+
+                        if (!matchesSearch) {
+                            return;
+                        }
+                    }
+
+                    combined.push(
+                        latestDiscussion
+                    );
+                }
+            );
+
+            filteredDiscussions.forEach(
+                (discussion) => {
+
+                    const alreadyIncluded =
+                        combined.some(
+                            (item) =>
+                                item.id ===
+                                discussion.id
+                        );
+
+                    if (!alreadyIncluded) {
+
+                        combined.push(
+                            discussion
+                        );
+                    }
+                }
+            );
+
+            return combined;
+
+        }, [
+            discussions,
+            filteredDiscussions,
+            openedDiscussions,
+            search,
+        ]);
+
+
+    /*
+     * Select a discussion and add it to the
+     * list of opened discussions.
+     */
+    const selectDiscussion = (
+        discussion: Discussion
+    ) => {
+
+        setSelectedDiscussion(
+            discussion
+        );
+
+        setOpenedDiscussions(
+            (currentOpened) => {
+
+                const alreadyOpen =
+                    currentOpened.some(
+                        (item) =>
+                            item.id ===
+                            discussion.id
+                    );
+
+                if (alreadyOpen) {
+                    return currentOpened;
+                }
+
+                return [
+                    ...currentOpened,
+                    discussion,
+                ];
+            }
+        );
+
+        setSendError("");
+    };
+
+
+    /*
+     * Send a new HCP message.
      */
     const sendMessage = async () => {
 
@@ -277,8 +497,12 @@ function DiscussionPage() {
         }
 
         setSending(true);
+        setSendError("");
 
         try {
+
+            const text =
+                newMessage.trim();
 
             const messagesRef =
                 collection(
@@ -291,34 +515,22 @@ function DiscussionPage() {
             await addDoc(
                 messagesRef,
                 {
-                    /*
-                     * Firebase authenticated user.
-                     */
-                    userId: user.uid,
+                    authorId:
+                        user.uid,
 
-                    /*
-                     * Actual message content.
-                     */
-                    text: newMessage.trim(),
+                    text,
 
-                    /*
-                     * HCP post.
-                     */
-                    role: "hcp",
+                    role:
+                        "hcp",
 
-                    /*
-                     * Keep the HCP anonymous
-                     * in the UI.
-                     */
                     anonymousName:
                         "Anonymous HCP",
 
-                    verified: true,
+                    verified:
+                        true,
 
-                    /*
-                     * Top-level message.
-                     */
-                    parentMessageId: null,
+                    parentMessageId:
+                        null,
 
                     createdAt:
                         Timestamp.now(),
@@ -334,6 +546,19 @@ function DiscussionPage() {
                 error
             );
 
+            if (error instanceof Error) {
+
+                setSendError(
+                    `Message could not be sent: ${error.message}`
+                );
+
+            } else {
+
+                setSendError(
+                    "Message could not be sent. Please try again."
+                );
+            }
+
         } finally {
 
             setSending(false);
@@ -342,13 +567,7 @@ function DiscussionPage() {
 
 
     /*
-     * Create a pharma reply to an HCP message.
-     *
-     * The reply is stored in the SAME
-     * messages collection.
-     *
-     * parentMessageId identifies the
-     * message being replied to.
+     * Send a response as a verified Pharma representative.
      */
     const sendPharmaReply = async (
         parentMessageId: string,
@@ -357,6 +576,7 @@ function DiscussionPage() {
 
         if (
             !user ||
+            userRole !== "pharma" ||
             !selectedDiscussion ||
             text.trim() === ""
         ) {
@@ -364,6 +584,8 @@ function DiscussionPage() {
         }
 
         try {
+
+            setSendError("");
 
             const messagesRef =
                 collection(
@@ -376,15 +598,14 @@ function DiscussionPage() {
             await addDoc(
                 messagesRef,
                 {
-                    /*
-                     * Firebase user who created
-                     * the response.
-                     */
-                    userId: user.uid,
+                    authorId:
+                        user.uid,
 
-                    text: text.trim(),
+                    text:
+                        text.trim(),
 
-                    role: "pharma",
+                    role:
+                        "pharma",
 
                     anonymousName:
                         "Verified Pharma Representative",
@@ -392,11 +613,9 @@ function DiscussionPage() {
                     company:
                         "Example Pharma",
 
-                    verified: true,
+                    verified:
+                        true,
 
-                    /*
-                     * This makes it a reply.
-                     */
                     parentMessageId,
 
                     createdAt:
@@ -410,6 +629,21 @@ function DiscussionPage() {
                 "Error sending pharma reply:",
                 error
             );
+
+            if (error instanceof Error) {
+
+                setSendError(
+                    `Response could not be sent: ${error.message}`
+                );
+
+            } else {
+
+                setSendError(
+                    "Response could not be sent. Please try again."
+                );
+            }
+
+            throw error;
         }
     };
 
@@ -428,7 +662,7 @@ function DiscussionPage() {
 
 
     /*
-     * Authentication check.
+     * User must be signed in.
      */
     if (!user) {
 
@@ -444,8 +678,6 @@ function DiscussionPage() {
 
         <div className="discussion-page">
 
-            {/* LEFT SIDE */}
-
             <aside className="discussion-sidebar">
 
                 <div className="discussion-sidebar-header">
@@ -460,8 +692,6 @@ function DiscussionPage() {
 
                 </div>
 
-
-                {/* SEARCH */}
 
                 <div className="discussion-search">
 
@@ -483,13 +713,11 @@ function DiscussionPage() {
                 </div>
 
 
-                {/* DISCUSSION LIST */}
-
                 <div className="discussion-list">
 
                     {search === "" && (
                         <div className="section-label">
-                            POPULAR DISCUSSIONS
+                            DISCUSSIONS
                         </div>
                     )}
 
@@ -500,7 +728,7 @@ function DiscussionPage() {
                     )}
 
 
-                    {filteredDiscussions.length === 0 ? (
+                    {sidebarDiscussions.length === 0 ? (
 
                         <div className="no-results">
                             No discussions found.
@@ -508,7 +736,7 @@ function DiscussionPage() {
 
                     ) : (
 
-                        filteredDiscussions.map(
+                        sidebarDiscussions.map(
                             (discussion) => (
 
                                 <button
@@ -520,14 +748,16 @@ function DiscussionPage() {
                                             : "discussion-item"
                                     }
                                     onClick={() =>
-                                        setSelectedDiscussion(
+                                        selectDiscussion(
                                             discussion
                                         )
                                     }
                                 >
 
                                     <div className="discussion-item-title">
+
                                         {discussion.title}
+
                                     </div>
 
                                     <div className="discussion-item-info">
@@ -555,8 +785,6 @@ function DiscussionPage() {
             </aside>
 
 
-            {/* RIGHT SIDE */}
-
             <main className="discussion-main">
 
                 {!selectedDiscussion ? (
@@ -577,8 +805,6 @@ function DiscussionPage() {
                 ) : (
 
                     <>
-
-                        {/* DISCUSSION HEADER */}
 
                         <header className="discussion-header">
 
@@ -622,7 +848,16 @@ function DiscussionPage() {
                         </header>
 
 
-                        {/* MESSAGES */}
+                        {sendError !== "" && (
+
+                            <div className="discussion-error">
+
+                                {sendError}
+
+                            </div>
+
+                        )}
+
 
                         <div className="messages-area">
 
@@ -640,6 +875,10 @@ function DiscussionPage() {
                                         <Message
                                             key={message.id}
                                             message={message}
+                                            currentUserId={user.uid}
+                                            isPharma={
+                                                userRole === "pharma"
+                                            }
                                             onPharmaReply={
                                                 sendPharmaReply
                                             }
@@ -652,8 +891,6 @@ function DiscussionPage() {
 
                         </div>
 
-
-                        {/* HCP MESSAGE BOX */}
 
                         <div className="message-composer">
 
@@ -693,9 +930,14 @@ function DiscussionPage() {
 
                                 <button
                                     onClick={sendMessage}
-                                    disabled={sending}
+                                    disabled={
+                                        sending ||
+                                        newMessage.trim() === ""
+                                    }
                                 >
-                                    →
+                                    {sending
+                                        ? "..."
+                                        : "→"}
                                 </button>
 
                             </div>
@@ -720,15 +962,21 @@ interface MessageProps {
 
     message: DiscussionMessage;
 
+    currentUserId: string;
+
+    isPharma: boolean;
+
     onPharmaReply: (
         parentMessageId: string,
         text: string
-    ) => void;
+    ) => Promise<void>;
 }
 
 
 function Message({
     message,
+    currentUserId,
+    isPharma,
     onPharmaReply,
 }: MessageProps) {
 
@@ -738,41 +986,94 @@ function Message({
     const [replyText, setReplyText] =
         useState("");
 
+    const [replySending, setReplySending] =
+        useState(false);
+
 
     /*
-     * Submit pharma reply.
+     * Only a message with this user's authorId
+     * is considered their own message.
+     *
+     * This means pre-generated messages stay on
+     * the left even if they have a parentMessageId.
      */
-    const submitReply = () => {
+    const isOwnMessage =
+        message.authorId === currentUserId;
 
-        if (replyText.trim() === "") {
+
+    /*
+     * Determine how the message should look.
+     */
+    let displayName =
+        message.anonymousName;
+
+    if (
+        message.role === "hcp" &&
+        isOwnMessage
+    ) {
+        displayName = "You";
+    }
+
+
+    let messageClass =
+        "message";
+
+    if (isOwnMessage) {
+
+        messageClass =
+            "message own-message";
+
+    } else if (
+        message.role === "pharma"
+    ) {
+
+        messageClass =
+            "message pharma-reply";
+    }
+
+
+    /*
+     * Submit a Pharma response.
+     */
+    const submitReply = async () => {
+
+        if (
+            replyText.trim() === "" ||
+            replySending
+        ) {
             return;
         }
 
-        onPharmaReply(
-            message.id,
-            replyText
-        );
+        setReplySending(true);
 
-        setReplyText("");
-        setReplyOpen(false);
+        try {
+
+            await onPharmaReply(
+                message.id,
+                replyText
+            );
+
+            setReplyText("");
+            setReplyOpen(false);
+
+        } catch (error) {
+
+            console.error(
+                "Error submitting pharma reply:",
+                error
+            );
+
+        } finally {
+
+            setReplySending(false);
+        }
     };
-
-
-    /*
-     * Reply styling.
-     */
-    const isReply =
-        message.parentMessageId !== null;
 
 
     return (
 
         <div
-            className={
-                isReply
-                    ? "message pharma-reply"
-                    : "message"
-            }
+            className={messageClass}
         >
 
             <div className="message-header">
@@ -781,7 +1082,9 @@ function Message({
 
                     {message.role === "pharma"
                         ? "P"
-                        : "A"}
+                        : isOwnMessage
+                            ? "Y"
+                            : "A"}
 
                 </div>
 
@@ -789,7 +1092,7 @@ function Message({
 
                     <div className="message-name">
 
-                        {message.anonymousName}
+                        {displayName}
 
                         {message.role === "pharma" && (
                             <span className="verified-badge">
@@ -819,57 +1122,62 @@ function Message({
             </div>
 
 
-            {/* PHARMA REPLY BUTTON */}
-
-            {message.role === "hcp" && (
-
-                <button
-                    className="reply-button"
-                    onClick={() =>
-                        setReplyOpen(
-                            !replyOpen
-                        )
-                    }
-                >
-
-                    {replyOpen
-                        ? "Cancel"
-                        : "Reply as Pharma"}
-
-                </button>
-
-            )}
-
-
-            {/* PHARMA REPLY COMPOSER */}
-
-            {replyOpen && (
-
-                <div className="pharma-reply-composer">
-
-                    <div className="pharma-label">
-                        Verified Pharma Response
-                    </div>
-
-                    <textarea
-                        placeholder="Write an approved response..."
-                        value={replyText}
-                        onChange={(event) =>
-                            setReplyText(
-                                event.target.value
-                            )
-                        }
-                    />
+            
+            {isPharma &&
+                message.role === "hcp" && (
 
                     <button
-                        onClick={submitReply}
+                        className="reply-button"
+                        onClick={() =>
+                            setReplyOpen(
+                                !replyOpen
+                            )
+                        }
                     >
-                        Post Response
+
+                        {replyOpen
+                            ? "Cancel"
+                            : "Reply as Pharma"}
+
                     </button>
+                )}
 
-                </div>
 
-            )}
+            {isPharma &&
+                replyOpen && (
+
+                    <div className="pharma-reply-composer">
+
+                        <div className="pharma-label">
+                            Verified Pharma Response
+                        </div>
+
+                        <textarea
+                            placeholder="Write an approved response..."
+                            value={replyText}
+                            disabled={replySending}
+                            onChange={(event) =>
+                                setReplyText(
+                                    event.target.value
+                                )
+                            }
+                        />
+
+                        <button
+                            onClick={submitReply}
+                            disabled={
+                                replySending ||
+                                replyText.trim() === ""
+                            }
+                        >
+                            {replySending
+                                ? "Posting..."
+                                : "Post Response"}
+                        </button>
+
+                    </div>
+
+                )}
 
         </div>
     );

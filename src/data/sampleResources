@@ -1,0 +1,229 @@
+const sampleResources: Resource[] = [
+    // ========================================================
+    // SMS
+    // ========================================================
+
+    {
+        id: "sms-1",
+        type: "sms",
+        title: "New hypertension treatment update",
+        description:
+            "A new clinical update covering emerging approaches to treatment-resistant hypertension.",
+        topic: "Hypertension",
+        date: "Sep 25, 2026",
+        sender: "Impiricus",
+    },
+
+    {
+        id: "sms-2",
+        type: "sms",
+        title: "Heart failure treatment sequencing",
+        description:
+            "Explore information about treatment sequencing and recent approaches to heart failure management.",
+        topic: "Heart Failure",
+        date: "Sep 24, 2026",
+        sender: "Impiricus",
+    },
+
+    {
+        id: "sms-3",
+        type: "sms",
+        title: "New cardiovascular clinical trial",
+        description:
+            "A cardiovascular clinical trial is currently enrolling patients at participating sites.",
+        topic: "Clinical Trials",
+        date: "Sep 23, 2026",
+        sender: "Impiricus",
+    },
+
+    {
+        id: "sms-4",
+        type: "sms",
+        title: "Patient access resources available",
+        description:
+            "New resources are available to help HCPs navigate patient access and coverage questions.",
+        topic: "Patient Access",
+        date: "Sep 22, 2026",
+        sender: "Impiricus",
+    },
+
+    {
+        id: "sms-5",
+        type: "sms",
+        title: "ACE inhibitor clinical update",
+        description:
+            "Review updated clinical information related to ACE inhibitor treatment and cardiovascular prevention.",
+        topic: "ACE Inhibitors",
+        date: "Sep 20, 2026",
+        sender: "Impiricus",
+    },
+
+    {
+        id: "sms-6",
+        type: "sms",
+        title: "Diabetes and cardiovascular risk",
+        description:
+            "Learn more about the relationship between diabetes management and cardiovascular risk.",
+        topic: "Diabetes",
+        date: "Sep 19, 2026",
+        sender: "Impiricus",
+    },
+
+    {
+        id: "sms-7",
+        type: "sms",
+        title: "MSL availability in your area",
+        description:
+            "A Medical Science Liaison may be available to discuss scientific questions related to cardiovascular care.",
+        topic: "MSL Support",
+        date: "Sep 18, 2026",
+        sender: "Impiricus",
+    },
+
+    {
+        id: "sms-8",
+        type: "sms",
+        title: "Heart failure patient resources",
+        description:
+            "New patient education resources are available for discussions around heart failure management.",
+        topic: "Heart Failure",
+        date: "Sep 16, 2026",
+        sender: "Impiricus",
+    },
+
+    {
+        id: "sms-9",
+        type: "sms",
+        title: "Hypertension guideline update",
+        description:
+            "Review recent information related to hypertension guidelines and blood pressure management.",
+        topic: "Hypertension",
+        date: "Sep 14, 2026",
+        sender: "Impiricus",
+    },
+
+    {
+        id: "sms-10",
+        type: "sms",
+        title: "New cardiovascular education series",
+        description:
+            "A new educational series covering cardiovascular disease, prevention, and treatment is now available.",
+        topic: "Cardiology",
+        date: "Sep 12, 2026",
+        sender: "Impiricus",
+    },
+
+    // ========================================================
+    // RESOURCES
+    // ========================================================
+
+    {
+        id: "resource-1",
+        type: "resource",
+        title: "Treatment-Resistant Hypertension Guide",
+        description:
+            "A clinical guide covering treatment considerations for patients whose blood pressure remains uncontrolled despite multiple therapies.",
+        topic: "Hypertension",
+        date: "Sep 24, 2026",
+        category: "Clinical Guide",
+    },
+
+    {
+        id: "resource-2",
+        type: "resource",
+        title: "Heart Failure Treatment Overview",
+        description:
+            "An overview of current approaches to heart failure treatment, monitoring, and treatment sequencing.",
+        topic: "Heart Failure",
+        date: "Sep 23, 2026",
+        category: "Clinical Resource",
+    },
+
+    {
+        id: "resource-3",
+        type: "resource",
+        title: "Cardiovascular Clinical Trials Directory",
+        description:
+            "Browse ongoing cardiovascular clinical trials and explore study information and eligibility criteria.",
+        topic: "Clinical Trials",
+        date: "Sep 21, 2026",
+        category: "Clinical Trials",
+    },
+
+    {
+        id: "resource-4",
+        type: "resource",
+        title: "Patient Access & Coverage Guide",
+        description:
+            "Information designed to help HCPs navigate common patient access, coverage, and insurance questions.",
+        topic: "Patient Access",
+        date: "Sep 20, 2026",
+        category: "Patient Support",
+    },
+
+    {
+        id: "resource-5",
+        type: "resource",
+        title: "ACE Inhibitor Reference",
+        description:
+            "Reference material covering ACE inhibitors, their clinical use, and cardiovascular treatment considerations.",
+        topic: "ACE Inhibitors",
+        date: "Sep 18, 2026",
+        category: "Reference",
+    },
+
+    {
+        id: "resource-6",
+        type: "resource",
+        title: "Diabetes & Cardiovascular Health",
+        description:
+            "Educational material exploring cardiovascular considerations when managing patients with diabetes.",
+        topic: "Diabetes",
+        date: "Sep 17, 2026",
+        category: "Educational Resource",
+    },
+
+    {
+        id: "resource-7",
+        type: "resource",
+        title: "Hypertension Patient Discussion Guide",
+        description:
+            "A patient-facing resource designed to support conversations about blood pressure goals and treatment.",
+        topic: "Hypertension",
+        date: "Sep 15, 2026",
+        category: "Patient Resource",
+    },
+
+    {
+        id: "resource-8",
+        type: "resource",
+        title: "Heart Failure Monitoring Checklist",
+        description:
+            "A practical reference for monitoring patients with heart failure during ongoing treatment.",
+        topic: "Heart Failure",
+        date: "Sep 13, 2026",
+        category: "Clinical Tool",
+    },
+
+    {
+        id: "resource-9",
+        type: "resource",
+        title: "Cardiovascular Prevention Reference",
+        description:
+            "A reference covering cardiovascular risk factors, prevention strategies, and patient conversations.",
+        topic: "Cardiology",
+        date: "Sep 11, 2026",
+        category: "Reference",
+    },
+
+    {
+        id: "resource-10",
+        type: "resource",
+        title: "Specialist Referral & Care Coordination",
+        description:
+            "Resources for coordinating care between primary care providers and cardiovascular specialists.",
+        topic: "Care Coordination",
+        date: "Sep 9, 2026",
+        category: "Practice Resource",
+    },
+];

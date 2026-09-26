@@ -559,3 +559,25 @@
 .select-discussion p {
     font-size: 12px;
 }
+
+.own-message {
+    margin-left: auto;
+    max-width: 75%;
+    background: #eef4ff;
+    border-color: #d6e4ff;
+}
+
+.own-message .avatar {
+    background: #dbe8ff;
+    color: #3157a6;
+}
+
+.pharma-reply {
+    background: #f5f1ff;
+    border-color: #e4dcff;
+}
+
+.pharma-reply .avatar {
+    background: #e9e0ff;
+    color: #6842a5;
+}

@@ -20,6 +20,7 @@ export interface Discussion {
 
 export interface DiscussionMessage {
     id: string;
+    authorId: string;
     text: string;
 
     role: "hcp" | "pharma";

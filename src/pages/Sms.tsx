@@ -17,17 +17,236 @@ import { auth } from "../firebase/auth";
 
 import type { SmsMessage } from "../types";
 import SmsCard from "../components/SmsCard";
-import { Link } from "react-router-dom";
+import ResourceCard from "../components/ResourceCard";
+
+
+type Resource = {
+    id: string;
+    title: string;
+    description: string;
+    topic: string;
+    category: string;
+    date: string;
+};
+
+
+type ContentType = "all" | "sms" | "resource";
+
+
+const sampleResources: Resource[] = [
+
+    {
+        id: "resource-1",
+        title: "Treatment-Resistant Hypertension Guide",
+        description:
+            "A clinical guide covering treatment considerations for patients whose blood pressure remains uncontrolled despite multiple therapies.",
+        topic: "Hypertension",
+        category: "Clinical Guide",
+        date: "Sep 24, 2026",
+    },
+
+    {
+        id: "resource-2",
+        title: "Heart Failure Treatment Overview",
+        description:
+            "An overview of current approaches to heart failure treatment, monitoring, and treatment sequencing.",
+        topic: "Heart Failure",
+        category: "Clinical Resource",
+        date: "Sep 23, 2026",
+    },
+
+    {
+        id: "resource-3",
+        title: "Cardiovascular Clinical Trials Directory",
+        description:
+            "Browse ongoing cardiovascular clinical trials and explore study information and eligibility criteria.",
+        topic: "Clinical Trials",
+        category: "Clinical Trials",
+        date: "Sep 21, 2026",
+    },
+
+    {
+        id: "resource-4",
+        title: "Patient Access & Coverage Guide",
+        description:
+            "Information designed to help HCPs navigate common patient access, coverage, and insurance questions.",
+        topic: "Patient Access",
+        category: "Patient Support",
+        date: "Sep 20, 2026",
+    },
+
+    {
+        id: "resource-5",
+        title: "ACE Inhibitor Reference",
+        description:
+            "Reference material covering ACE inhibitors, their clinical use, and cardiovascular treatment considerations.",
+        topic: "ACE Inhibitors",
+        category: "Reference",
+        date: "Sep 18, 2026",
+    },
+
+    {
+        id: "resource-6",
+        title: "Diabetes & Cardiovascular Health",
+        description:
+            "Educational material exploring cardiovascular considerations when managing patients with diabetes.",
+        topic: "Diabetes",
+        category: "Educational Resource",
+        date: "Sep 17, 2026",
+    },
+
+    {
+        id: "resource-7",
+        title: "Hypertension Patient Discussion Guide",
+        description:
+            "A patient-facing resource designed to support conversations about blood pressure goals and treatment.",
+        topic: "Hypertension",
+        category: "Patient Resource",
+        date: "Sep 15, 2026",
+    },
+
+    {
+        id: "resource-8",
+        title: "Heart Failure Monitoring Checklist",
+        description:
+            "A practical reference for monitoring patients with heart failure during ongoing treatment.",
+        topic: "Heart Failure",
+        category: "Clinical Tool",
+        date: "Sep 13, 2026",
+    },
+
+    {
+        id: "resource-9",
+        title: "Cardiovascular Prevention Reference",
+        description:
+            "A reference covering cardiovascular risk factors, prevention strategies, and patient conversations.",
+        topic: "Cardiology",
+        category: "Reference",
+        date: "Sep 11, 2026",
+    },
+
+    {
+        id: "resource-10",
+        title: "Specialist Referral & Care Coordination",
+        description:
+            "Resources for coordinating care between primary care providers and cardiovascular specialists.",
+        topic: "Care Coordination",
+        category: "Practice Resource",
+        date: "Sep 9, 2026",
+    },
+
+    {
+        id: "resource-11",
+        title: "Blood Pressure Monitoring Guide",
+        description:
+            "A practical guide to monitoring blood pressure and identifying patterns that may require additional evaluation.",
+        topic: "Hypertension",
+        category: "Clinical Tool",
+        date: "Sep 8, 2026",
+    },
+
+    {
+        id: "resource-12",
+        title: "Cardiac Risk Assessment Reference",
+        description:
+            "Reference material for assessing cardiovascular risk factors during routine clinical care.",
+        topic: "Cardiology",
+        category: "Reference",
+        date: "Sep 7, 2026",
+    },
+
+    {
+        id: "resource-13",
+        title: "Heart Failure Patient Education",
+        description:
+            "Educational material to support conversations with patients about heart failure symptoms, treatment, and monitoring.",
+        topic: "Heart Failure",
+        category: "Patient Resource",
+        date: "Sep 6, 2026",
+    },
+
+    {
+        id: "resource-14",
+        title: "Clinical Trial Eligibility Checklist",
+        description:
+            "A quick reference for reviewing common eligibility considerations when identifying potential clinical trial candidates.",
+        topic: "Clinical Trials",
+        category: "Clinical Tool",
+        date: "Sep 5, 2026",
+    },
+
+    {
+        id: "resource-15",
+        title: "Managing Cardiovascular Risk in Diabetes",
+        description:
+            "Clinical education covering cardiovascular risk considerations for patients with diabetes.",
+        topic: "Diabetes",
+        category: "Clinical Resource",
+        date: "Sep 4, 2026",
+    },
+
+    {
+        id: "resource-16",
+        title: "Medication Adherence Discussion Guide",
+        description:
+            "A resource for discussing medication adherence, treatment barriers, and patient concerns.",
+        topic: "Patient Care",
+        category: "Patient Resource",
+        date: "Sep 3, 2026",
+    },
+
+    {
+        id: "resource-17",
+        title: "Hypertension Treatment Planning Tool",
+        description:
+            "A clinical planning resource for evaluating treatment approaches and monitoring blood pressure control.",
+        topic: "Hypertension",
+        category: "Clinical Tool",
+        date: "Sep 2, 2026",
+    },
+
+    {
+        id: "resource-18",
+        title: "Cardiology Clinical Education Hub",
+        description:
+            "A collection of educational materials covering cardiovascular conditions, treatment, and prevention.",
+        topic: "Cardiology",
+        category: "Educational Resource",
+        date: "Sep 1, 2026",
+    },
+
+    {
+        id: "resource-19",
+        title: "Care Coordination Best Practices",
+        description:
+            "Resources focused on communication and coordination between primary care providers and specialists.",
+        topic: "Care Coordination",
+        category: "Practice Resource",
+        date: "Aug 30, 2026",
+    },
+
+    {
+        id: "resource-20",
+        title: "Patient Conversation Starter Guide",
+        description:
+            "A collection of prompts and resources to support productive conversations between HCPs and patients.",
+        topic: "Patient Care",
+        category: "Patient Resource",
+        date: "Aug 28, 2026",
+    },
+];
 
 
 function Sms() {
+
     const [user, setUser] = useState<User | null>(null);
 
     const [messages, setMessages] = useState<SmsMessage[]>([]);
 
     const [search, setSearch] = useState("");
 
-    const [selectedDate, setSelectedDate] = useState("All");
+    const [contentType, setContentType] =
+        useState<ContentType>("all");
 
     const [loading, setLoading] = useState(true);
 
@@ -36,6 +255,7 @@ function Sms() {
      * Get the currently logged-in user.
      */
     useEffect(() => {
+
         const unsubscribe = onAuthStateChanged(
             auth,
             (currentUser) => {
@@ -44,23 +264,19 @@ function Sms() {
         );
 
         return () => unsubscribe();
+
     }, []);
 
 
     /*
      * Get SMS messages belonging to this user.
      *
-     * Firestore structure:
+     * Existing Firestore structure:
      *
      * users/{userId}/messages/{messageId}
-     *
-     * {
-     *   userId: "...",
-     *   text: "...",
-     *   createdAt: Timestamp
-     * }
      */
     useEffect(() => {
+
         if (!user) {
             setMessages([]);
             setLoading(false);
@@ -84,6 +300,7 @@ function Sms() {
         const unsubscribe = onSnapshot(
             messagesQuery,
             (snapshot) => {
+
                 const firebaseMessages: SmsMessage[] =
                     snapshot.docs.map((document) => ({
                         id: document.id,
@@ -94,6 +311,7 @@ function Sms() {
                 setLoading(false);
             },
             (error) => {
+
                 console.error(
                     "Error loading SMS messages:",
                     error
@@ -104,109 +322,104 @@ function Sms() {
         );
 
         return () => unsubscribe();
+
     }, [user]);
 
 
     /*
-     * Filter messages based on search and date.
+     * Filter SMS messages based on search.
      */
     const filteredMessages = useMemo(() => {
-        return messages.filter((message) => {
-            /*
-             * Search message text.
-             */
-            const searchLower =
-                search.toLowerCase().trim();
 
-            const matchesSearch =
+        const searchLower =
+            search.toLowerCase().trim();
+
+        return messages.filter((message) => {
+
+            return (
                 searchLower === "" ||
                 message.text
                     .toLowerCase()
-                    .includes(searchLower);
+                    .includes(searchLower)
+            );
+
+        });
+
+    }, [messages, search]);
 
 
-            /*
-             * Date filter.
-             */
-            let matchesDate = true;
+    /*
+     * Filter resources based on search.
+     */
+    const filteredResources = useMemo(() => {
 
-            if (
-                selectedDate !== "All" &&
-                message.createdAt
-            ) {
-                const messageDate =
-                    message.createdAt.toDate();
+        const searchLower =
+            search.toLowerCase().trim();
 
-                const now = new Date();
+        return sampleResources.filter((resource) => {
 
-                if (selectedDate === "7") {
-                    const sevenDaysAgo =
-                        new Date();
-
-                    sevenDaysAgo.setDate(
-                        now.getDate() - 7
-                    );
-
-                    matchesDate =
-                        messageDate >=
-                        sevenDaysAgo;
-                }
-
-                if (selectedDate === "30") {
-                    const thirtyDaysAgo =
-                        new Date();
-
-                    thirtyDaysAgo.setDate(
-                        now.getDate() - 30
-                    );
-
-                    matchesDate =
-                        messageDate >=
-                        thirtyDaysAgo;
-                }
-
-                if (selectedDate === "90") {
-                    const ninetyDaysAgo =
-                        new Date();
-
-                    ninetyDaysAgo.setDate(
-                        now.getDate() - 90
-                    );
-
-                    matchesDate =
-                        messageDate >=
-                        ninetyDaysAgo;
-                }
+            if (searchLower === "") {
+                return true;
             }
 
             return (
-                matchesSearch &&
-                matchesDate
+                resource.title
+                    .toLowerCase()
+                    .includes(searchLower) ||
+
+                resource.description
+                    .toLowerCase()
+                    .includes(searchLower) ||
+
+                resource.topic
+                    .toLowerCase()
+                    .includes(searchLower) ||
+
+                resource.category
+                    .toLowerCase()
+                    .includes(searchLower)
             );
+
         });
-    }, [
-        messages,
-        search,
-        selectedDate,
-    ]);
+
+    }, [search]);
+
+
+    /*
+     * Decide which content should appear.
+     */
+    const showSms =
+        contentType === "all" ||
+        contentType === "sms";
+
+    const showResources =
+        contentType === "all" ||
+        contentType === "resource";
+
+
+    const totalResults =
+        (showSms ? filteredMessages.length : 0) +
+        (showResources ? filteredResources.length : 0);
 
 
     /*
      * User isn't signed in.
      */
     if (!user) {
+
         return (
             <div className="login-message">
-                Please sign in to view your messages.
+                Please sign in to view your resources.
             </div>
         );
     }
+
+
     return (
+
         <div className="min-h-screen bg-gray-50">
 
-            {/* MAIN CONTENT */}
-
-            <main>
+            <main className="lg:ml-64">
 
                 {/* TOP BAR */}
 
@@ -215,13 +428,15 @@ function Sms() {
                     <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
 
                         <div>
+
                             <h1 className="m-0 text-3xl font-bold tracking-tight text-gray-900">
-                                SMS Messages
+                                Resources
                             </h1>
 
                             <p className="mt-1 text-sm text-gray-500">
-                                Your Impiricus communications
+                                Your Impiricus information hub
                             </p>
+
                         </div>
 
 
@@ -235,7 +450,7 @@ function Sms() {
 
                             <input
                                 type="text"
-                                placeholder="Search messages..."
+                                placeholder="Search resources..."
                                 value={search}
                                 onChange={(event) =>
                                     setSearch(event.target.value)
@@ -244,6 +459,7 @@ function Sms() {
                             />
 
                             {search && (
+
                                 <button
                                     type="button"
                                     onClick={() => setSearch("")}
@@ -252,6 +468,7 @@ function Sms() {
                                 >
                                     ×
                                 </button>
+
                             )}
 
                         </div>
@@ -262,9 +479,11 @@ function Sms() {
                         <div className="flex items-center gap-3">
 
                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">
+
                                 {user.displayName
                                     ? user.displayName.charAt(0).toUpperCase()
                                     : "H"}
+
                             </div>
 
                             <div className="hidden xl:block">
@@ -290,103 +509,150 @@ function Sms() {
 
                 <div className="px-6 py-8 lg:px-10">
 
+
                     {/* FILTER BAR */}
 
-                    <section className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <section className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-3">
 
                             <span className="text-sm font-medium text-gray-700">
-                                Filter by
+                                Show
                             </span>
 
-                            <select
-                                value={selectedDate}
-                                onChange={(event) =>
-                                    setSelectedDate(event.target.value)
-                                }
-                                className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 outline-none focus:border-gray-400"
-                            >
-                                <option value="All">
-                                    Any date
-                                </option>
 
-                                <option value="7">
-                                    Last 7 days
-                                </option>
+                            {/* CONTENT TYPE */}
 
-                                <option value="30">
-                                    Last 30 days
-                                </option>
+                            <div className="flex rounded-lg border border-gray-200 bg-white p-1">
 
-                                <option value="90">
-                                    Last 90 days
-                                </option>
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setContentType("all")
+                                    }
+                                    className={`rounded-md px-4 py-2 text-sm font-medium transition ${
+                                        contentType === "all"
+                                            ? "bg-gray-900 text-white"
+                                            : "text-gray-600 hover:bg-gray-100"
+                                    }`}
+                                >
+                                    All
+                                </button>
 
-                            </select>
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setContentType("sms")
+                                    }
+                                    className={`rounded-md px-4 py-2 text-sm font-medium transition ${
+                                        contentType === "sms"
+                                            ? "bg-gray-900 text-white"
+                                            : "text-gray-600 hover:bg-gray-100"
+                                    }`}
+                                >
+                                    SMS
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setContentType("resource")
+                                    }
+                                    className={`rounded-md px-4 py-2 text-sm font-medium transition ${
+                                        contentType === "resource"
+                                            ? "bg-gray-900 text-white"
+                                            : "text-gray-600 hover:bg-gray-100"
+                                    }`}
+                                >
+                                    Resources
+                                </button>
+
+                            </div>
 
                         </div>
 
+
+                        {/* COUNT */}
 
                         <div className="text-sm text-gray-500">
 
                             <span className="font-semibold text-gray-900">
-                                {filteredMessages.length}
+                                {totalResults}
                             </span>{" "}
 
-                            {filteredMessages.length === 1
-                                ? "message"
-                                : "messages"}
+                            {totalResults === 1
+                                ? "result"
+                                : "results"}
 
                         </div>
 
                     </section>
 
 
-                    {/* MESSAGE GRID */}
+                    {/* CONTENT GRID */}
 
-                    <section>
+                    {loading && showSms ? (
 
-                        {loading ? (
+                        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center text-sm text-gray-500">
+                            Loading messages...
+                        </div>
 
-                            <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center text-sm text-gray-500">
-                                Loading messages...
+                    ) : totalResults === 0 ? (
+
+                        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center">
+
+                            <div className="mb-4 text-4xl">
+                                ✉
                             </div>
 
-                        ) : filteredMessages.length === 0 ? (
+                            <h2 className="mb-2 text-xl font-semibold text-gray-900">
+                                No resources found
+                            </h2>
 
-                            <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center">
+                            <p className="text-sm text-gray-500">
+                                Try changing your search or filters.
+                            </p>
 
-                                <div className="mb-4 text-4xl">
-                                    ✉
-                                </div>
+                        </div>
 
-                                <h2 className="mb-2 text-xl font-semibold text-gray-900">
-                                    No messages found
-                                </h2>
+                    ) : (
 
-                                <p className="text-sm text-gray-500">
-                                    Try changing your search or filters.
-                                </p>
+                        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
 
-                            </div>
+                            {/* SMS */}
 
-                        ) : (
+                            {showSms &&
 
-                            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                                filteredMessages.map((message) => (
 
-                                {filteredMessages.map((message) => (
                                     <SmsCard
-                                        key={message.id}
+                                        key={`sms-${message.id}`}
                                         message={message}
                                     />
-                                ))}
 
-                            </div>
+                                ))
 
-                        )}
+                            }
 
-                    </section>
+
+                            {/* RESOURCES */}
+
+                            {showResources &&
+
+                                filteredResources.map((resource) => (
+
+                                    <ResourceCard
+                                        key={resource.id}
+                                        resource={resource}
+                                    />
+
+                                ))
+
+                            }
+
+                        </div>
+
+                    )}
 
                 </div>
 
@@ -395,5 +661,6 @@ function Sms() {
         </div>
     );
 }
+
 
 export default Sms;
