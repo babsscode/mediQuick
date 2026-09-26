@@ -1,58 +1,36 @@
 import type { SmsMessage } from "../types";
 
-interface SmsCardProps {
+type SmsCardProps = {
     message: SmsMessage;
-}
+};
 
 function SmsCard({ message }: SmsCardProps) {
-
-    const formattedDate = message.date.toDate().toLocaleDateString(
-        "en-US",
-        {
-            month: "short",
-            day: "numeric",
-            year: "numeric"
-        }
-    );
+    const date = message.createdAt.toDate();
 
     return (
-        <div className="sms-card">
+        <article className="sms-card">
 
             <div className="sms-card-header">
 
-                <div>
-                    <h3>{message.title}</h3>
-                    <p className="sms-sender">
-                        {message.sender}
-                    </p>
-                </div>
-
-                <span className="sms-date">
-                    {formattedDate}
+                <span className="sms-label">
+                    SMS
                 </span>
+
+                <time>
+                    {date.toLocaleDateString()}
+                </time>
 
             </div>
 
-            <span className="drug-tag">
-                {message.drug}
-            </span>
+            <div className="sms-card-body">
 
-            <p className="sms-body">
-                {message.body}
-            </p>
+                <p>
+                    {message.text}
+                </p>
 
-            {message.link && (
-                <a
-                    href={message.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="sms-link"
-                >
-                    View resource →
-                </a>
-            )}
+            </div>
 
-        </div>
+        </article>
     );
 }
 

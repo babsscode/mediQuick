@@ -1,11 +1,8 @@
 import { Timestamp } from "firebase/firestore";
 
-export interface SmsMessage {
+export type SmsMessage = {
     id: string;
-    title: string;
-    body: string;
-    drug: string;
-    sender: string;
-    date: Timestamp;
-    link?: string;
-}
+    userId: string;
+    text: string;
+    createdAt: Timestamp;
+};

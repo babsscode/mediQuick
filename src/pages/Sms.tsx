@@ -26,14 +26,13 @@ function Sms() {
 
     const [search, setSearch] = useState("");
 
-    const [selectedDrug, setSelectedDrug] = useState("All");
-
     const [selectedDate, setSelectedDate] = useState("All");
 
     const [loading, setLoading] = useState(true);
 
+
     /*
-     * Get the currently logged-in HCP.
+     * Get the currently logged-in user.
      */
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(
@@ -46,8 +45,19 @@ function Sms() {
         return () => unsubscribe();
     }, []);
 
+
     /*
-     * Get SMS messages belonging to this HCP.
+     * Get SMS messages belonging to this user.
+     *
+     * Firestore structure:
+     *
+     * users/{userId}/messages/{messageId}
+     *
+     * {
+     *   userId: "...",
+     *   text: "...",
+     *   createdAt: Timestamp
+     * }
      */
     useEffect(() => {
         if (!user) {
@@ -62,12 +72,12 @@ function Sms() {
             db,
             "users",
             user.uid,
-            "smsMessages"
+            "messages"
         );
 
         const messagesQuery = query(
             messagesRef,
-            orderBy("date", "desc")
+            orderBy("createdAt", "desc")
         );
 
         const unsubscribe = onSnapshot(
@@ -95,100 +105,94 @@ function Sms() {
         return () => unsubscribe();
     }, [user]);
 
-    /*
-     * Get a unique list of drugs for the filter.
-     */
-    const drugs = useMemo(() => {
-        const uniqueDrugs = new Set<string>();
-
-        messages.forEach((message) => {
-            if (message.drug) {
-                uniqueDrugs.add(message.drug);
-            }
-        });
-
-        return Array.from(uniqueDrugs).sort();
-    }, [messages]);
 
     /*
-     * Filter messages based on search,
-     * drug, and date.
+     * Filter messages based on search and date.
      */
     const filteredMessages = useMemo(() => {
         return messages.filter((message) => {
-            const searchLower = search.toLowerCase();
+            /*
+             * Search message text.
+             */
+            const searchLower =
+                search.toLowerCase().trim();
 
             const matchesSearch =
-                message.title
-                    .toLowerCase()
-                    .includes(searchLower) ||
-                message.body
-                    .toLowerCase()
-                    .includes(searchLower) ||
-                message.drug
-                    .toLowerCase()
-                    .includes(searchLower) ||
-                message.sender
+                searchLower === "" ||
+                message.text
                     .toLowerCase()
                     .includes(searchLower);
 
-            const matchesDrug =
-                selectedDrug === "All" ||
-                message.drug === selectedDrug;
 
+            /*
+             * Date filter.
+             */
             let matchesDate = true;
 
-            if (selectedDate !== "All") {
-                const messageDate = message.date.toDate();
+            if (
+                selectedDate !== "All" &&
+                message.createdAt
+            ) {
+                const messageDate =
+                    message.createdAt.toDate();
+
                 const now = new Date();
 
                 if (selectedDate === "7") {
-                    const sevenDaysAgo = new Date();
+                    const sevenDaysAgo =
+                        new Date();
 
                     sevenDaysAgo.setDate(
                         now.getDate() - 7
                     );
 
                     matchesDate =
-                        messageDate >= sevenDaysAgo;
+                        messageDate >=
+                        sevenDaysAgo;
                 }
 
                 if (selectedDate === "30") {
-                    const thirtyDaysAgo = new Date();
+                    const thirtyDaysAgo =
+                        new Date();
 
                     thirtyDaysAgo.setDate(
                         now.getDate() - 30
                     );
 
                     matchesDate =
-                        messageDate >= thirtyDaysAgo;
+                        messageDate >=
+                        thirtyDaysAgo;
                 }
 
                 if (selectedDate === "90") {
-                    const ninetyDaysAgo = new Date();
+                    const ninetyDaysAgo =
+                        new Date();
 
                     ninetyDaysAgo.setDate(
                         now.getDate() - 90
                     );
 
                     matchesDate =
-                        messageDate >= ninetyDaysAgo;
+                        messageDate >=
+                        ninetyDaysAgo;
                 }
             }
 
             return (
                 matchesSearch &&
-                matchesDrug &&
                 matchesDate
             );
         });
     }, [
         messages,
         search,
-        selectedDrug,
         selectedDate,
     ]);
 
+
+    /*
+     * User isn't signed in.
+     */
     if (!user) {
         return (
             <div className="login-message">
@@ -196,6 +200,7 @@ function Sms() {
             </div>
         );
     }
+
 
     return (
         <div className="app">
@@ -250,6 +255,7 @@ function Sms() {
 
             </aside>
 
+
             {/* MAIN CONTENT */}
 
             <main className="main">
@@ -269,6 +275,7 @@ function Sms() {
                         </p>
 
                     </div>
+
 
                     {/* SEARCH */}
 
@@ -304,17 +311,21 @@ function Sms() {
 
                     </div>
 
+
                     {/* PROFILE */}
 
                     <div className="profile">
 
                         <div className="profile-avatar">
+
                             {user.displayName
                                 ? user.displayName.charAt(0)
                                 : "H"}
+
                         </div>
 
                         <div>
+
                             <strong>
                                 {user.displayName ||
                                     "Healthcare Professional"}
@@ -323,11 +334,13 @@ function Sms() {
                             <span>
                                 HCP
                             </span>
+
                         </div>
 
                     </div>
 
                 </header>
+
 
                 {/* FILTER BAR */}
 
@@ -336,6 +349,9 @@ function Sms() {
                     <div className="filter-label">
                         Filter by
                     </div>
+
+
+                    {/* DATE FILTER */}
 
                     <select
                         value={selectedDate}
@@ -360,38 +376,24 @@ function Sms() {
                         <option value="90">
                             Last 90 days
                         </option>
+
                     </select>
 
-                    <select
-                        value={selectedDrug}
-                        onChange={(event) =>
-                            setSelectedDrug(
-                                event.target.value
-                            )
-                        }
-                    >
-                        <option value="All">
-                            All drugs
-                        </option>
 
-                        {drugs.map((drug) => (
-                            <option
-                                key={drug}
-                                value={drug}
-                            >
-                                {drug}
-                            </option>
-                        ))}
-                    </select>
+                    {/* MESSAGE COUNT */}
 
                     <div className="message-count">
+
                         {filteredMessages.length}{" "}
+
                         {filteredMessages.length === 1
                             ? "message"
                             : "messages"}
+
                     </div>
 
                 </section>
+
 
                 {/* MESSAGE GRID */}
 
