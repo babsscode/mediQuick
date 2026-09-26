@@ -62,11 +62,14 @@ export type InformationItem = {
 
 export type PeerDoctor = {
     id: string;
+    uid: string;
     name: string;
     specialty: string;
     location: string;
-    interests: string[];
-    bio: string;
+    about: string;
+    bio?: string;
+    interests?: string[];
+    relevanceReason?: string;
 };
 
 export type PeerRequest = {
