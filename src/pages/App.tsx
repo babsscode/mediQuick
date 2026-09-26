@@ -14,6 +14,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Sms from "../pages/Sms";
 import DiscussionPage from "../pages/DiscussionPage";
+import InformationPage from "../pages/Information";
 import Navbar from "../components/Navbar";
 
 function ProtectedRoute({
@@ -93,24 +94,6 @@ function Dashboard() {
         </div>
     );
 }
-
-
-function Information() {
-    return (
-        <div className="mx-auto max-w-7xl px-6 py-10">
-
-            <h1 className="text-3xl font-bold text-gray-900">
-                Information
-            </h1>
-
-            <p className="mt-2 text-gray-500">
-                Relevant healthcare information and resources.
-            </p>
-
-        </div>
-    );
-}
-
 
 function App() {
     const [user, setUser] = useState<User | null>(null);
@@ -206,7 +189,7 @@ function App() {
 
                         <Route
                             path="/app/information"
-                            element={<Information />}
+                            element={<InformationPage />}
                         />
 
                     </Route>

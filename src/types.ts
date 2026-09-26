@@ -34,3 +34,28 @@ export interface DiscussionMessage {
 
     parentMessageId?: string | null;
 }
+
+export type HcpActivity = {
+    specialty: string;
+    field: string;
+    searches: string[];
+    viewedContentIds: string[];
+    savedContentIds: string[];
+    interactedTopics: string[];
+};
+
+export type InformationItem = {
+    id: string;
+    title: string;
+    type:
+        | "Article"
+        | "Sponsor Resource"
+        | "Clinical Update"
+        | "Resource";
+    source: string;
+    specialty: string;
+    summary: string;
+    content: string;
+    date: string;
+    tags: string[];
+};
