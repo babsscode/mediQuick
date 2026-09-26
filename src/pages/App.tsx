@@ -16,6 +16,7 @@ import Sms from "../pages/Sms";
 import DiscussionPage from "../pages/DiscussionPage";
 import InformationPage from "../pages/Information";
 import PeerConnect from "../pages/PeerConnect";
+import Dashboard from "../pages/Dashboard";
 import Navbar from "../components/Navbar";
 
 function ProtectedRoute({
@@ -74,23 +75,6 @@ function AppLayout() {
             <main>
                 <Outlet />
             </main>
-
-        </div>
-    );
-}
-
-
-function Dashboard() {
-    return (
-        <div className="mx-auto max-w-7xl px-6 py-10">
-
-            <h1 className="text-3xl font-bold text-gray-900">
-                Dashboard
-            </h1>
-
-            <p className="mt-2 text-gray-500">
-                Your personalized Impiricus dashboard.
-            </p>
 
         </div>
     );
