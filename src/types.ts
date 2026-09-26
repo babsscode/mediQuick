@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+export type RegistrationRole = "hcp" | "pharma" | "team_member";
 
 export type SmsMessage = {
     id: string;

@@ -6,20 +6,29 @@ import {
     onSnapshot,
     orderBy,
     query,
-    Timestamp
+    Timestamp,
 } from "firebase/firestore";
 
+import {
+    onAuthStateChanged,
+    type User,
+} from "firebase/auth";
+
 import { db } from "../firebase/firestore";
+import { auth } from "../firebase/auth";
 
 import type {
     Discussion,
-    DiscussionMessage
+    DiscussionMessage,
 } from "../types";
 
 import "../DiscussionPage.css";
 
 
 function DiscussionPage() {
+
+    const [user, setUser] =
+        useState<User | null>(null);
 
     const [discussions, setDiscussions] =
         useState<Discussion[]>([]);
@@ -39,9 +48,34 @@ function DiscussionPage() {
     const [loading, setLoading] =
         useState(true);
 
+    const [sending, setSending] =
+        useState(false);
+
 
     /*
-     * Load available discussions
+     * Get currently authenticated user.
+     */
+    useEffect(() => {
+
+        const unsubscribe =
+            onAuthStateChanged(
+                auth,
+                (currentUser) => {
+                    setUser(currentUser);
+                }
+            );
+
+        return () => unsubscribe();
+
+    }, []);
+
+
+    /*
+     * Load discussions.
+     *
+     * Firestore:
+     *
+     * discussions/{discussionId}
      */
     useEffect(() => {
 
@@ -51,7 +85,10 @@ function DiscussionPage() {
         const discussionsQuery =
             query(
                 discussionsRef,
-                orderBy("participantCount", "desc")
+                orderBy(
+                    "participantCount",
+                    "desc"
+                )
             );
 
         const unsubscribe =
@@ -60,37 +97,70 @@ function DiscussionPage() {
                 (snapshot) => {
 
                     const loadedDiscussions =
-                        snapshot.docs.map((document) => ({
-                            id: document.id,
-                            ...document.data()
-                        })) as Discussion[];
+                        snapshot.docs.map(
+                            (document) => ({
+                                id: document.id,
+                                ...document.data(),
+                            })
+                        ) as Discussion[];
 
-                    setDiscussions(loadedDiscussions);
+                    setDiscussions(
+                        loadedDiscussions
+                    );
+
                     setLoading(false);
 
                     /*
-                     * Automatically open the first
-                     * discussion when the page loads.
+                     * Automatically select the
+                     * first discussion.
                      */
-                    if (
-                        loadedDiscussions.length > 0 &&
-                        selectedDiscussion === null
-                    ) {
-                        setSelectedDiscussion(
-                            loadedDiscussions[0]
-                        );
-                    }
+                    setSelectedDiscussion(
+                        (current) => {
+
+                            if (current === null) {
+                                return (
+                                    loadedDiscussions[0] ??
+                                    null
+                                );
+                            }
+
+                            /*
+                             * Update the selected
+                             * discussion with fresh
+                             * Firestore data.
+                             */
+                            return (
+                                loadedDiscussions.find(
+                                    (discussion) =>
+                                        discussion.id ===
+                                        current.id
+                                ) ?? null
+                            );
+                        }
+                    );
+                },
+                (error) => {
+
+                    console.error(
+                        "Error loading discussions:",
+                        error
+                    );
+
+                    setLoading(false);
                 }
             );
 
         return () => unsubscribe();
 
-    }, [selectedDiscussion]);
+    }, []);
 
 
     /*
-     * Load messages whenever the selected
-     * discussion changes.
+     * Load messages for selected discussion.
+     *
+     * Firestore:
+     *
+     * discussions/{discussionId}/messages/{messageId}
      */
     useEffect(() => {
 
@@ -119,12 +189,23 @@ function DiscussionPage() {
                 (snapshot) => {
 
                     const loadedMessages =
-                        snapshot.docs.map((document) => ({
-                            id: document.id,
-                            ...document.data()
-                        })) as DiscussionMessage[];
+                        snapshot.docs.map(
+                            (document) => ({
+                                id: document.id,
+                                ...document.data(),
+                            })
+                        ) as DiscussionMessage[];
 
-                    setMessages(loadedMessages);
+                    setMessages(
+                        loadedMessages
+                    );
+                },
+                (error) => {
+
+                    console.error(
+                        "Error loading discussion messages:",
+                        error
+                    );
                 }
             );
 
@@ -135,16 +216,19 @@ function DiscussionPage() {
 
     /*
      * Search discussions.
-     *
-     * For the MVP, we're loading the discussions
-     * and filtering them in React.
      */
     const filteredDiscussions =
         useMemo(() => {
 
             const searchText =
-                search.toLowerCase().trim();
+                search
+                    .toLowerCase()
+                    .trim();
 
+            /*
+             * No search:
+             * show popular discussions.
+             */
             if (searchText === "") {
 
                 return discussions.filter(
@@ -153,6 +237,10 @@ function DiscussionPage() {
                 );
             }
 
+            /*
+             * Search title,
+             * description and specialty.
+             */
             return discussions.filter(
                 (discussion) =>
                     discussion.title
@@ -168,101 +256,185 @@ function DiscussionPage() {
                         .includes(searchText)
             );
 
-        }, [discussions, search]);
+        }, [
+            discussions,
+            search,
+        ]);
 
 
     /*
-     * Send a new HCP message.
+     * Send a new HCP discussion message.
      */
     const sendMessage = async () => {
 
         if (
+            !user ||
             !selectedDiscussion ||
-            newMessage.trim() === ""
+            newMessage.trim() === "" ||
+            sending
         ) {
             return;
         }
 
-        const messagesRef =
-            collection(
-                db,
-                "discussions",
-                selectedDiscussion.id,
-                "messages"
+        setSending(true);
+
+        try {
+
+            const messagesRef =
+                collection(
+                    db,
+                    "discussions",
+                    selectedDiscussion.id,
+                    "messages"
+                );
+
+            await addDoc(
+                messagesRef,
+                {
+                    /*
+                     * Firebase authenticated user.
+                     */
+                    userId: user.uid,
+
+                    /*
+                     * Actual message content.
+                     */
+                    text: newMessage.trim(),
+
+                    /*
+                     * HCP post.
+                     */
+                    role: "hcp",
+
+                    /*
+                     * Keep the HCP anonymous
+                     * in the UI.
+                     */
+                    anonymousName:
+                        "Anonymous HCP",
+
+                    verified: true,
+
+                    /*
+                     * Top-level message.
+                     */
+                    parentMessageId: null,
+
+                    createdAt:
+                        Timestamp.now(),
+                }
             );
 
-        await addDoc(
-            messagesRef,
-            {
-                text: newMessage.trim(),
+            setNewMessage("");
 
-                role: "hcp",
+        } catch (error) {
 
-                /*
-                 * Keep the HCP anonymous.
-                 */
-                anonymousName: "Anonymous HCP",
+            console.error(
+                "Error sending message:",
+                error
+            );
 
-                verified: true,
+        } finally {
 
-                createdAt: Timestamp.now(),
-
-                parentMessageId: null
-            }
-        );
-
-        setNewMessage("");
+            setSending(false);
+        }
     };
 
 
     /*
-     * Create a pharma response to a specific
-     * HCP message.
+     * Create a pharma reply to an HCP message.
+     *
+     * The reply is stored in the SAME
+     * messages collection.
+     *
+     * parentMessageId identifies the
+     * message being replied to.
      */
     const sendPharmaReply = async (
         parentMessageId: string,
         text: string
     ) => {
 
-        if (!selectedDiscussion || text.trim() === "") {
+        if (
+            !user ||
+            !selectedDiscussion ||
+            text.trim() === ""
+        ) {
             return;
         }
 
-        const messagesRef =
-            collection(
-                db,
-                "discussions",
-                selectedDiscussion.id,
-                "messages"
+        try {
+
+            const messagesRef =
+                collection(
+                    db,
+                    "discussions",
+                    selectedDiscussion.id,
+                    "messages"
+                );
+
+            await addDoc(
+                messagesRef,
+                {
+                    /*
+                     * Firebase user who created
+                     * the response.
+                     */
+                    userId: user.uid,
+
+                    text: text.trim(),
+
+                    role: "pharma",
+
+                    anonymousName:
+                        "Verified Pharma Representative",
+
+                    company:
+                        "Example Pharma",
+
+                    verified: true,
+
+                    /*
+                     * This makes it a reply.
+                     */
+                    parentMessageId,
+
+                    createdAt:
+                        Timestamp.now(),
+                }
             );
 
-        await addDoc(
-            messagesRef,
-            {
-                text: text.trim(),
+        } catch (error) {
 
-                role: "pharma",
-
-                anonymousName:
-                    "Verified Pharma Representative",
-
-                company: "Example Pharma",
-
-                verified: true,
-
-                createdAt: Timestamp.now(),
-
-                parentMessageId
-            }
-        );
+            console.error(
+                "Error sending pharma reply:",
+                error
+            );
+        }
     };
 
 
+    /*
+     * Loading state.
+     */
     if (loading) {
 
         return (
             <div className="discussion-loading">
                 Loading discussions...
+            </div>
+        );
+    }
+
+
+    /*
+     * Authentication check.
+     */
+    if (!user) {
+
+        return (
+            <div className="discussion-loading">
+                Please sign in to view discussions.
             </div>
         );
     }
@@ -302,7 +474,9 @@ function DiscussionPage() {
                         placeholder="Search discussions..."
                         value={search}
                         onChange={(event) =>
-                            setSearch(event.target.value)
+                            setSearch(
+                                event.target.value
+                            )
                         }
                     />
 
@@ -363,17 +537,17 @@ function DiscussionPage() {
                                         </span>
 
                                         <span>
-                                            {discussion.participantCount}
-                                            {" "}HCPs
+                                            {
+                                                discussion.participantCount
+                                            }{" "}
+                                            HCPs
                                         </span>
 
                                     </div>
 
                                 </button>
-
                             )
                         )
-
                     )}
 
                 </div>
@@ -411,15 +585,21 @@ function DiscussionPage() {
                             <div>
 
                                 <div className="discussion-specialty">
-                                    {selectedDiscussion.specialty}
+                                    {
+                                        selectedDiscussion.specialty
+                                    }
                                 </div>
 
                                 <h2>
-                                    {selectedDiscussion.title}
+                                    {
+                                        selectedDiscussion.title
+                                    }
                                 </h2>
 
                                 <p>
-                                    {selectedDiscussion.description}
+                                    {
+                                        selectedDiscussion.description
+                                    }
                                 </p>
 
                             </div>
@@ -427,7 +607,10 @@ function DiscussionPage() {
                             <div className="participants">
 
                                 <strong>
-                                    {selectedDiscussion.participantCount}
+                                    {
+                                        selectedDiscussion
+                                            .participantCount
+                                    }
                                 </strong>
 
                                 <span>
@@ -443,18 +626,28 @@ function DiscussionPage() {
 
                         <div className="messages-area">
 
-                            {messages.map(
-                                (message) => (
+                            {messages.length === 0 ? (
 
-                                    <Message
-                                        key={message.id}
-                                        message={message}
-                                        onPharmaReply={
-                                            sendPharmaReply
-                                        }
-                                    />
+                                <div className="no-results">
+                                    No messages yet.
+                                </div>
 
+                            ) : (
+
+                                messages.map(
+                                    (message) => (
+
+                                        <Message
+                                            key={message.id}
+                                            message={message}
+                                            onPharmaReply={
+                                                sendPharmaReply
+                                            }
+                                        />
+
+                                    )
                                 )
+
                             )}
 
                         </div>
@@ -471,6 +664,7 @@ function DiscussionPage() {
                                 </span>
 
                                 Posting anonymously
+
                             </div>
 
                             <div className="composer-row">
@@ -479,6 +673,7 @@ function DiscussionPage() {
                                     type="text"
                                     placeholder="Share your perspective..."
                                     value={newMessage}
+                                    disabled={sending}
                                     onChange={(event) =>
                                         setNewMessage(
                                             event.target.value
@@ -498,6 +693,7 @@ function DiscussionPage() {
 
                                 <button
                                     onClick={sendMessage}
+                                    disabled={sending}
                                 >
                                     →
                                 </button>
@@ -517,7 +713,11 @@ function DiscussionPage() {
 }
 
 
+/*
+ * Individual discussion message.
+ */
 interface MessageProps {
+
     message: DiscussionMessage;
 
     onPharmaReply: (
@@ -529,7 +729,7 @@ interface MessageProps {
 
 function Message({
     message,
-    onPharmaReply
+    onPharmaReply,
 }: MessageProps) {
 
     const [replyOpen, setReplyOpen] =
@@ -539,7 +739,14 @@ function Message({
         useState("");
 
 
+    /*
+     * Submit pharma reply.
+     */
     const submitReply = () => {
+
+        if (replyText.trim() === "") {
+            return;
+        }
 
         onPharmaReply(
             message.id,
@@ -551,11 +758,18 @@ function Message({
     };
 
 
+    /*
+     * Reply styling.
+     */
+    const isReply =
+        message.parentMessageId !== null;
+
+
     return (
 
         <div
             className={
-                message.parentMessageId
+                isReply
                     ? "message pharma-reply"
                     : "message"
             }
@@ -564,9 +778,11 @@ function Message({
             <div className="message-header">
 
                 <div className="avatar">
+
                     {message.role === "pharma"
                         ? "P"
                         : "A"}
+
                 </div>
 
                 <div>
@@ -584,7 +800,11 @@ function Message({
                     </div>
 
                     <div className="message-time">
-                        Just now
+
+                        {message.createdAt
+                            ?.toDate()
+                            .toLocaleString()}
+
                     </div>
 
                 </div>
@@ -593,7 +813,9 @@ function Message({
 
 
             <div className="message-text">
+
                 {message.text}
+
             </div>
 
 
@@ -604,12 +826,16 @@ function Message({
                 <button
                     className="reply-button"
                     onClick={() =>
-                        setReplyOpen(!replyOpen)
+                        setReplyOpen(
+                            !replyOpen
+                        )
                     }
                 >
+
                     {replyOpen
                         ? "Cancel"
                         : "Reply as Pharma"}
+
                 </button>
 
             )}
