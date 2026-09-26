@@ -43,6 +43,19 @@ function Navbar() {
                         SMS Messages
                     </NavLink>
 
+                                        <NavLink
+                        to="/app/peer-connect"
+                        className={({ isActive }) =>
+                            `rounded-lg px-4 py-2 text-sm font-medium transition ${
+                                isActive
+                                    ? "bg-black text-white"
+                                    : "text-gray-600 hover:bg-gray-100"
+                            }`
+                        }
+                    >
+                        Peer Connect
+                    </NavLink>
+
                     <NavLink
                         to="/app/discussion"
                         className={({ isActive }) =>
@@ -68,7 +81,6 @@ function Navbar() {
                     >
                         Information
                     </NavLink>
-
                 </div>
 
 

@@ -59,3 +59,42 @@ export type InformationItem = {
     date: string;
     tags: string[];
 };
+
+export type PeerDoctor = {
+    id: string;
+    name: string;
+    specialty: string;
+    location: string;
+    interests: string[];
+    bio: string;
+};
+
+export type PeerRequest = {
+    id: string;
+    fromDoctorId: string;
+    fromDoctorName: string;
+    specialty: string;
+    location: string;
+    title: string;
+    question: string;
+    topics: string[];
+    status: "pending" | "accepted" | "rejected";
+};
+
+export type PeerMessage = {
+    id: string;
+    sender: "me" | "them";
+    text: string;
+    timestamp: string;
+};
+
+export type PeerConversation = {
+    id: string;
+    doctorId: string;
+    doctorName: string;
+    specialty: string;
+    location: string;
+    title: string;
+    originalQuestion: string;
+    messages: PeerMessage[];
+};
