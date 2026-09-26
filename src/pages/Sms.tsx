@@ -17,6 +17,7 @@ import { auth } from "../firebase/auth";
 
 import type { SmsMessage } from "../types";
 import SmsCard from "../components/SmsCard";
+import { Link } from "react-router-dom";
 
 
 function Sms() {
@@ -215,13 +216,9 @@ function Sms() {
 
                 <nav>
 
-                    <a
-                        className="nav-item active"
-                        href="#"
-                    >
-                        <span>▣</span>
-                        Messages
-                    </a>
+                    <Link to="/app/discussion">
+                        Discussion
+                    </Link>
 
                     <a
                         className="nav-item"
