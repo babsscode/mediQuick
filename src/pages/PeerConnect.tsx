@@ -396,30 +396,30 @@ function PeerConnect() {
     }
 
     return (
-        <div className="min-h-[calc(100vh-72px)] bg-gray-50">
+        <div className="min-h-[calc(100vh-72px)] bg-canvas">
             <div className="mx-auto flex h-[calc(100vh-72px)] max-w-[1500px] flex-col px-6 py-6">
                 <div className="mb-5">
-                    <h1 className="text-3xl font-semibold text-gray-900">
+                    <h1 className="text-3xl font-semibold text-heading">
                         Peer Connect
                     </h1>
 
-                    <p className="mt-1 text-sm text-gray-500">
+                    <p className="mt-1 text-sm text-muted">
                         Connect with relevant HCPs around
                         specific clinical questions.
                     </p>
                 </div>
 
-                <div className="flex min-h-0 flex-1 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                <div className="flex min-h-0 flex-1 overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
                     {/* LEFT COLUMN */}
-                    <div className="flex w-[340px] shrink-0 flex-col border-r border-gray-200">
+                    <div className="flex w-[340px] shrink-0 flex-col border-r border-line">
                         {/* TABS */}
-                        <div className="flex border-b border-gray-200">
+                        <div className="flex border-b border-line">
                             <button
                                 onClick={handleSelectChats}
                                 className={`flex-1 px-5 py-4 text-sm font-semibold transition ${
                                     viewMode === "chats"
-                                        ? "border-b-2 border-gray-900 text-gray-900"
-                                        : "text-gray-400 hover:text-gray-700"
+                                        ? "border-b-2 border-accent text-heading"
+                                        : "text-muted hover:text-heading"
                                 }`}
                             >
                                 Chats
@@ -429,14 +429,14 @@ function PeerConnect() {
                                 onClick={handleSelectRequests}
                                 className={`flex-1 px-5 py-4 text-sm font-semibold transition ${
                                     viewMode === "requests"
-                                        ? "border-b-2 border-gray-900 text-gray-900"
-                                        : "text-gray-400 hover:text-gray-700"
+                                        ? "border-b-2 border-accent text-heading"
+                                        : "text-muted hover:text-heading"
                                 }`}
                             >
                                 Requests
 
                                 {pendingRequests.length > 0 && (
-                                    <span className="ml-2 rounded-full bg-gray-900 px-2 py-0.5 text-xs text-white">
+                                    <span className="ml-2 rounded-full bg-accent px-2 py-0.5 text-xs text-surface">
                                         {pendingRequests.length}
                                     </span>
                                 )}
@@ -461,15 +461,15 @@ function PeerConnect() {
                                                         null
                                                     );
                                                 }}
-                                                className={`w-full border-b border-gray-100 px-5 py-4 text-left transition hover:bg-gray-50 ${
+                                                className={`w-full border-b border-line px-5 py-4 text-left transition hover:bg-canvas ${
                                                     selectedConversationId ===
                                                     conversation.id
-                                                        ? "bg-gray-50"
+                                                        ? "bg-mist"
                                                         : ""
                                                 }`}
                                             >
                                                 <div className="flex items-start gap-3">
-                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700">
+                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-mist text-sm font-semibold text-heading">
                                                         {conversation.doctorName
                                                             .replace(
                                                                 "Dr. ",
@@ -481,13 +481,13 @@ function PeerConnect() {
                                                     </div>
 
                                                     <div className="min-w-0">
-                                                        <p className="font-medium text-gray-900">
+                                                        <p className="font-medium text-heading">
                                                             {
                                                                 conversation.doctorName
                                                             }
                                                         </p>
 
-                                                        <p className="mt-0.5 truncate text-xs text-gray-400">
+                                                        <p className="mt-0.5 truncate text-xs text-muted">
                                                             {
                                                                 conversation.title
                                                             }
@@ -500,7 +500,7 @@ function PeerConnect() {
 
                                     {conversations.length ===
                                         0 && (
-                                        <div className="px-5 py-10 text-center text-sm text-gray-400">
+                                        <div className="px-5 py-10 text-center text-sm text-muted">
                                             No conversations yet.
                                         </div>
                                     )}
@@ -519,15 +519,15 @@ function PeerConnect() {
                                                         null
                                                     );
                                                 }}
-                                                className={`w-full border-b border-gray-100 px-5 py-4 text-left transition hover:bg-gray-50 ${
+                                                className={`w-full border-b border-line px-5 py-4 text-left transition hover:bg-canvas ${
                                                     selectedRequestId ===
                                                     request.id
-                                                        ? "bg-gray-50"
+                                                        ? "bg-mist"
                                                         : ""
                                                 }`}
                                             >
                                                 <div className="flex items-start gap-3">
-                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700">
+                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-mist text-sm font-semibold text-heading">
                                                         {request.fromDoctorName
                                                             .replace(
                                                                 "Dr. ",
@@ -539,13 +539,13 @@ function PeerConnect() {
                                                     </div>
 
                                                     <div className="min-w-0">
-                                                        <p className="font-medium text-gray-900">
+                                                        <p className="font-medium text-heading">
                                                             {
                                                                 request.fromDoctorName
                                                             }
                                                         </p>
 
-                                                        <p className="mt-0.5 truncate text-xs text-gray-400">
+                                                        <p className="mt-0.5 truncate text-xs text-muted">
                                                             {
                                                                 request.title
                                                             }
@@ -558,7 +558,7 @@ function PeerConnect() {
 
                                     {pendingRequests.length ===
                                         0 && (
-                                        <div className="px-5 py-10 text-center text-sm text-gray-400">
+                                        <div className="px-5 py-10 text-center text-sm text-muted">
                                             No pending requests.
                                         </div>
                                     )}
@@ -567,12 +567,12 @@ function PeerConnect() {
                         </div>
 
                         {/* NEW QUESTION */}
-                        <div className="border-t border-gray-200 p-4">
+                        <div className="border-t border-line p-4">
                             <button
                                 onClick={() =>
                                     setShowNewQuestion(true)
                                 }
-                                className="w-full rounded-xl bg-gray-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-gray-800"
+                                className="w-full rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-surface transition hover:bg-heading"
                             >
                                 + New Question
                             </button>
@@ -655,22 +655,22 @@ function EmptyPanel({
     return (
         <div className="flex h-full items-center justify-center">
             <div className="max-w-md text-center">
-                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-2xl">
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-mist text-2xl">
                     +
                 </div>
 
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-xl font-semibold text-heading">
                     Start a peer conversation
                 </h2>
 
-                <p className="mt-2 text-sm leading-6 text-gray-500">
+                <p className="mt-2 text-sm leading-6 text-heading">
                     Ask a specific clinical question and
                     find relevant HCPs to discuss it with.
                 </p>
 
                 <button
                     onClick={onNewQuestion}
-                    className="mt-6 rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white hover:bg-gray-800"
+                    className="mt-6 rounded-xl bg-ink px-5 py-3 text-sm font-semibold text-surface hover:bg-heading"
                 >
                     Ask a New Question
                 </button>
@@ -693,20 +693,20 @@ function ConversationPanel({
     return (
         <div className="flex h-full flex-col">
             {/* HEADER */}
-            <div className="border-b border-gray-200 px-7 py-5">
+            <div className="border-b border-line px-7 py-5">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-200 font-semibold text-gray-700">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-mist font-semibold text-heading">
                         {conversation.doctorName
                             .replace("Dr. ", "")
                             .charAt(0)}
                     </div>
 
                     <div>
-                        <h2 className="font-semibold text-gray-900">
+                        <h2 className="font-semibold text-heading">
                             {conversation.doctorName}
                         </h2>
 
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-muted">
                             {conversation.specialty} ·{" "}
                             {conversation.location}
                         </p>
@@ -715,12 +715,12 @@ function ConversationPanel({
             </div>
 
             {/* ORIGINAL QUESTION */}
-            <div className="border-b border-gray-100 bg-gray-50 px-7 py-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+            <div className="border-b border-line bg-canvas px-7 py-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                     Original question
                 </p>
 
-                <p className="mt-1 text-sm leading-6 text-gray-700">
+                <p className="mt-1 text-sm leading-6 text-heading">
                     {conversation.originalQuestion}
                 </p>
             </div>
@@ -746,26 +746,26 @@ function ConversationPanel({
                             <div
                                 className={`rounded-2xl px-4 py-3 text-sm leading-6 ${
                                     message.sender === "me"
-                                        ? "bg-gray-900 text-white"
-                                        : "bg-gray-100 text-gray-700"
+                                        ? "bg-ink text-surface"
+                                        : "bg-mist text-heading"
                                 }`}
                             >
                                 {message.text}
                             </div>
 
-                            <p className="mt-1 px-1 text-xs text-gray-400">
+                            <p className="mt-1 px-1 text-xs text-muted">
                                 {message.timestamp}
                             </p>
                         </div>
                     </div>
                 ))}
 
-                <div className="rounded-2xl border border-gray-200 bg-white p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                <div className="rounded-2xl border border-line bg-canvas p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                         Impiricus Support
                     </p>
 
-                    <p className="mt-1 text-sm leading-6 text-gray-600">
+                    <p className="mt-1 text-sm leading-6 text-heading">
                         Looking for additional information?
                         Relevant clinical, Medical Affairs, and
                         patient-support resources may be available
@@ -773,11 +773,11 @@ function ConversationPanel({
                     </p>
 
                     <div className="mt-3 flex gap-2">
-                        <button className="rounded-lg bg-gray-100 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-200">
+                        <button className="rounded-lg bg-canvas px-3 py-2 text-xs font-medium text-heading hover:bg-mist">
                             Clinical Resources
                         </button>
 
-                        <button className="rounded-lg bg-gray-100 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-200">
+                        <button className="rounded-lg bg-canvas px-3 py-2 text-xs font-medium text-heading hover:bg-mist">
                             Medical Affairs
                         </button>
                     </div>
@@ -785,7 +785,7 @@ function ConversationPanel({
             </div>
 
             {/* MESSAGE INPUT */}
-            <div className="border-t border-gray-200 p-5">
+            <div className="border-t border-line p-5">
                 <div className="flex items-center gap-3">
                     <input
                         value={message}
@@ -798,12 +798,12 @@ function ConversationPanel({
                             }
                         }}
                         placeholder="Type a message..."
-                        className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-gray-400 focus:bg-white"
+                        className="flex-1 rounded-xl border border-line bg-canvas px-4 py-3 text-sm outline-none transition focus:border-accent focus:bg-surface"
                     />
 
                     <button
                         onClick={onSendMessage}
-                        className="rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white hover:bg-gray-800"
+                        className="rounded-xl bg-ink px-5 py-3 text-sm font-semibold text-surface hover:bg-heading"
                     >
                         Send
                     </button>
@@ -826,34 +826,34 @@ function RequestPanel({
         <div className="flex h-full items-center justify-center overflow-y-auto p-8">
             <div className="w-full max-w-2xl">
                 <div className="flex items-center gap-4">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 text-xl font-semibold text-gray-700">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-mist text-xl font-semibold text-heading">
                         {request.fromDoctorName
                             .replace("Dr. ", "")
                             .charAt(0)}
                     </div>
 
                     <div>
-                        <h2 className="text-2xl font-semibold text-gray-900">
+                        <h2 className="text-2xl font-semibold text-heading">
                             {request.fromDoctorName}
                         </h2>
 
-                        <p className="mt-1 text-sm text-gray-400">
+                        <p className="mt-1 text-sm text-muted">
                             {request.specialty} ·{" "}
                             {request.location}
                         </p>
                     </div>
                 </div>
 
-                <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-6">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                <div className="mt-8 rounded-2xl border border-line bg-canvas p-6">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                         Wants to discuss
                     </p>
 
-                    <h3 className="mt-2 text-xl font-semibold text-gray-900">
+                    <h3 className="mt-2 text-xl font-semibold text-heading">
                         {request.title}
                     </h3>
 
-                    <p className="mt-4 text-sm leading-7 text-gray-600">
+                    <p className="mt-4 text-sm leading-7 text-ink">
                         {request.question}
                     </p>
 
@@ -861,7 +861,7 @@ function RequestPanel({
                         {request.topics.map((topic) => (
                             <span
                                 key={topic}
-                                className="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-gray-600"
+                                className="rounded-full bg-surface px-3 py-1.5 text-xs font-medium text-heading"
                             >
                                 {topic}
                             </span>
@@ -869,21 +869,21 @@ function RequestPanel({
                     </div>
                 </div>
 
-                <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-6">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                <div className="mt-5 rounded-2xl border border-line bg-surface p-6">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                         Profile
                     </p>
 
-                    <div className="mt-4 space-y-2 text-sm text-gray-600">
+                    <div className="mt-4 space-y-2 text-sm text-ink">
                         <p>
-                            <span className="font-medium text-gray-900">
+                            <span className="font-medium text-heading">
                                 Specialty:
                             </span>{" "}
                             {request.specialty}
                         </p>
 
                         <p>
-                            <span className="font-medium text-gray-900">
+                            <span className="font-medium text-heading">
                                 Location:
                             </span>{" "}
                             {request.location}
@@ -896,14 +896,14 @@ function RequestPanel({
                         onClick={() =>
                             onReject(request.id)
                         }
-                        className="flex-1 rounded-xl border border-gray-200 px-5 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                        className="flex-1 rounded-xl border border-line px-5 py-3 text-sm font-semibold text-heading hover:bg-canvas"
                     >
                         Reject
                     </button>
 
                     <button
                         onClick={() => onAccept(request)}
-                        className="flex-1 rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white hover:bg-gray-800"
+                        className="flex-1 rounded-xl bg-ink px-5 py-3 text-sm font-semibold text-surface hover:bg-heading"
                     >
                         Accept Request
                     </button>
@@ -936,26 +936,26 @@ function NewQuestionModal({
 }) {
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-6"
             onClick={onClose}
         >
             <div
-                className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl"
+                className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-surface p-8 shadow-2xl"
                 onClick={(event) =>
                     event.stopPropagation()
                 }
             >
                 <div className="flex items-start justify-between">
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                             Peer Connect
                         </p>
 
-                        <h2 className="mt-1 text-2xl font-semibold text-gray-900">
+                        <h2 className="mt-1 text-2xl font-semibold text-heading">
                             Ask Your Peers
                         </h2>
 
-                        <p className="mt-2 text-sm text-gray-500">
+                        <p className="mt-2 text-sm text-muted">
                             Describe what you want to discuss
                             and we'll find relevant HCPs.
                         </p>
@@ -963,28 +963,28 @@ function NewQuestionModal({
 
                     <button
                         onClick={onClose}
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-lg text-gray-500 hover:bg-gray-200"
+                        className="flex h-9 w-9 items-center justify-center rounded-full bg-mist text-lg text-muted hover:bg-mist"
                     >
                         ×
                     </button>
                 </div>
 
-                <div className="mt-7 rounded-2xl border border-gray-200 bg-gray-50 p-5">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                <div className="mt-7 rounded-2xl border border-line bg-canvas p-5">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                         Your Profile
                     </p>
 
                     <div className="mt-3 flex gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-sm font-semibold text-gray-700">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface text-sm font-semibold text-heading">
                             A
                         </div>
 
                         <div>
-                            <p className="font-medium text-gray-900">
+                            <p className="font-medium text-heading">
                                 Your HCP Profile
                             </p>
 
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-muted">
                                 Cardiology · Atlanta, GA
                             </p>
                         </div>
@@ -992,7 +992,7 @@ function NewQuestionModal({
                 </div>
 
                 <div className="mt-6">
-                    <label className="text-sm font-semibold text-gray-900">
+                    <label className="text-sm font-semibold text-heading">
                         What do you need help with?
                     </label>
 
@@ -1005,10 +1005,10 @@ function NewQuestionModal({
                         }
                         placeholder="Describe your specific clinical question. Do not include patient-identifying information."
                         rows={5}
-                        className="mt-2 w-full resize-none rounded-2xl border border-gray-200 bg-white p-4 text-sm leading-6 outline-none transition focus:border-gray-400"
+                        className="mt-2 w-full resize-none rounded-2xl border border-line bg-canvas p-4 text-sm leading-6 outline-none transition focus:border-accent focus:bg-surface"
                     />
 
-                    <p className="mt-2 text-xs text-gray-400">
+                    <p className="mt-2 text-xs text-muted">
                         Please do not include patient names,
                         dates of birth, or other identifying
                         information.
@@ -1017,7 +1017,7 @@ function NewQuestionModal({
                     <button
                         onClick={onFindPeers}
                         disabled={!question.trim()}
-                        className="mt-4 rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="mt-4 rounded-xl bg-ink px-5 py-3 text-sm font-semibold text-surface transition hover:bg-heading disabled:cursor-not-allowed disabled:opacity-40"
                     >
                         Find Relevant Peers
                     </button>
@@ -1025,12 +1025,12 @@ function NewQuestionModal({
 
                 {questionAnalysis && (
                     <div className="mt-7">
-                        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                        <div className="rounded-2xl border border-line bg-canvas p-5">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                                 AI-generated discussion
                             </p>
 
-                            <h3 className="mt-2 text-lg font-semibold text-gray-900">
+                            <h3 className="mt-2 text-lg font-semibold text-heading">
                                 {questionAnalysis.title}
                             </h3>
 
@@ -1039,7 +1039,7 @@ function NewQuestionModal({
                                     (topic) => (
                                         <span
                                             key={topic}
-                                            className="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-gray-600"
+                                            className="rounded-full bg-surface px-3 py-1.5 text-xs font-medium text-heading"
                                         >
                                             {topic}
                                         </span>
@@ -1054,17 +1054,17 @@ function NewQuestionModal({
                     <div className="mt-7">
                         <div className="flex items-end justify-between">
                             <div>
-                                <h3 className="font-semibold text-gray-900">
+                                <h3 className="font-semibold text-heading">
                                     Relevant HCPs
                                 </h3>
 
-                                <p className="mt-1 text-sm text-gray-500">
+                                <p className="mt-1 text-sm text-muted">
                                     Select up to 3 people to
                                     invite.
                                 </p>
                             </div>
 
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-muted">
                                 {selectedDoctors.length}/3
                                 selected
                             </p>
@@ -1088,12 +1088,12 @@ function NewQuestionModal({
                                             }
                                             className={`w-full rounded-2xl border p-4 text-left transition ${
                                                 selected
-                                                    ? "border-gray-900 bg-gray-50"
-                                                    : "border-gray-200 hover:border-gray-300"
+                                                    ? "border-ink bg-mist"
+                                                    : "border-line hover:border-mist"
                                             }`}
                                         >
                                             <div className="flex items-start gap-4">
-                                                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray-200 font-semibold text-gray-700">
+                                                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-mist font-semibold text-heading">
                                                     {doctor.name
                                                         .replace(
                                                             "Dr. ",
@@ -1107,13 +1107,13 @@ function NewQuestionModal({
                                                 <div className="min-w-0 flex-1">
                                                     <div className="flex items-center justify-between">
                                                         <div>
-                                                            <p className="font-medium text-gray-900">
+                                                            <p className="font-medium text-heading">
                                                                 {
                                                                     doctor.name
                                                                 }
                                                             </p>
 
-                                                            <p className="text-sm text-gray-400">
+                                                            <p className="text-sm text-muted">
                                                                 {
                                                                     doctor.specialty
                                                                 }{" "}
@@ -1127,8 +1127,8 @@ function NewQuestionModal({
                                                         <div
                                                             className={`flex h-5 w-5 items-center justify-center rounded-full border ${
                                                                 selected
-                                                                    ? "border-gray-900 bg-gray-900 text-white"
-                                                                    : "border-gray-300"
+                                                                    ? "border-ink bg-ink text-surface"
+                                                                    : "border-muted"
                                                             }`}
                                                         >
                                                             {selected &&
@@ -1136,7 +1136,7 @@ function NewQuestionModal({
                                                         </div>
                                                     </div>
 
-                                                    <p className="mt-3 text-sm leading-6 text-gray-500">
+                                                    <p className="mt-3 text-sm leading-6 text-heading">
                                                         {
                                                             doctor.bio
                                                         }
@@ -1156,7 +1156,7 @@ function NewQuestionModal({
                                                                         key={
                                                                             interest
                                                                         }
-                                                                        className="rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-500"
+                                                                        className="rounded-full bg-mist px-2.5 py-1 text-xs text-heading"
                                                                     >
                                                                         {
                                                                             interest
@@ -1179,7 +1179,7 @@ function NewQuestionModal({
                                 selectedDoctors.length ===
                                 0
                             }
-                            className="mt-5 w-full rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
+                            className="mt-5 w-full rounded-xl bg-ink px-5 py-3 text-sm font-semibold text-surface hover:bg-heading disabled:cursor-not-allowed disabled:opacity-40"
                         >
                             Send{" "}
                             {selectedDoctors.length > 0

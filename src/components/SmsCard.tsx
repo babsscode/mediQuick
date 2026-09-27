@@ -17,17 +17,17 @@ function SmsCard({ message }: SmsCardProps) {
     );
 
     return (
-        <article className="flex min-h-48 flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md">
+        <article className="flex min-h-48 flex-col rounded-2xl border border-line bg-surface p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-mist hover:shadow-md">
 
             {/* TOP */}
 
             <div className="mb-4 flex items-start justify-between gap-3">
 
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+                <span className="rounded-full bg-mist px-3 py-1 text-xs font-medium text-ink">
                     SMS
                 </span>
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-xl">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-mist text-xl">
                     💬
                 </div>
 
@@ -38,7 +38,7 @@ function SmsCard({ message }: SmsCardProps) {
 
             <div className="flex-1">
 
-                <p className="text-sm leading-6 text-gray-700">
+                <p className="text-sm leading-6 text-ink">
                     {message.text}
                 </p>
 
@@ -47,15 +47,15 @@ function SmsCard({ message }: SmsCardProps) {
 
             {/* BOTTOM */}
 
-            <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
+            <div className="mt-5 flex items-center justify-between border-t border-line pt-4">
 
                 <div>
 
-                    <p className="text-xs font-medium text-gray-700">
+                    <p className="text-xs font-medium text-ink">
                         Impiricus
                     </p>
 
-                    <p className="mt-1 text-xs text-gray-400">
+                    <p className="mt-1 text-xs text-muted">
                         {formattedDate}
                     </p>
 

@@ -50,21 +50,21 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-screen justify-center bg-mist px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+        <div className="rounded-2xl border border-line bg-surface p-8 shadow-sm">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl font-semibold tracking-tight text-heading">
               Welcome back
             </h1>
 
-            <p className="mt-2 text-gray-500">
+            <p className="mt-2 text-muted">
               Sign in to your account
             </p>
           </div>
 
           {error && (
-            <div className="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            <div className="mb-5 rounded-lg border border-accent bg-surface px-4 py-3 text-sm text-accent">
               {error}
             </div>
           )}
@@ -73,7 +73,7 @@ export default function Login() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink mb-2"
               >
                 Email
               </label>
@@ -86,7 +86,7 @@ export default function Login() {
                 placeholder="you@example.com"
                 autoComplete="email"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-line bg-canvas px-4 py-3 text-heading outline-none transition focus:border-accent focus:bg-surface focus:ring-2 focus:ring-accent/30"
               />
             </div>
 
@@ -94,14 +94,14 @@ export default function Login() {
               <div className="flex items-center justify-between mb-2">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-ink"
                 >
                   Password
                 </label>
 
                 <button
                   type="button"
-                  className="text-sm text-blue-600 hover:text-blue-700"
+                  className="text-sm text-accent hover:text-ink"
                   onClick={() => {
                     // Add password reset functionality here.
                   }}
@@ -118,24 +118,24 @@ export default function Login() {
                 placeholder="Enter your password"
                 autoComplete="current-password"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-line bg-canvas px-4 py-3 text-heading outline-none transition focus:border-accent focus:bg-surface focus:ring-2 focus:ring-accent/30"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg bg-ink px-4 py-3 font-medium text-surface transition hover:bg-heading disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-500">
+          <div className="mt-6 text-center text-sm text-muted">
             Don't have an account?{" "}
             <a
               href="/register"
-              className="font-medium text-blue-600 hover:text-blue-700"
+              className="font-medium text-accent hover:text-ink"
             >
               Create one
             </a>

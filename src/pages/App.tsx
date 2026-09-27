@@ -28,7 +28,7 @@ function ProtectedRoute({
 }) {
     if (loading) {
         return (
-            <div className="flex min-h-screen items-center justify-center">
+            <div className="flex min-h-screen items-center justify-center bg-canvas text-heading">
                 Loading...
             </div>
         );
@@ -52,7 +52,7 @@ function PublicRoute({
 }) {
     if (loading) {
         return (
-            <div className="flex min-h-screen items-center justify-center">
+            <div className="flex min-h-screen items-center justify-center bg-canvas text-heading">
                 Loading...
             </div>
         );
@@ -68,7 +68,7 @@ function PublicRoute({
 
 function AppLayout() {
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-canvas">
 
             <Navbar />
 

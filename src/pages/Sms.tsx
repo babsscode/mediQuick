@@ -408,7 +408,7 @@ function Sms() {
     if (!user) {
 
         return (
-            <div className="login-message">
+            <div className="flex min-h-screen items-center justify-center bg-canvas text-muted">
                 Please sign in to view your resources.
             </div>
         );
@@ -417,23 +417,23 @@ function Sms() {
 
     return (
 
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-canvas">
 
-            <main className="lg:ml-64">
+            <main>
 
                 {/* TOP BAR */}
 
-                <header className="border-b border-gray-200 bg-white px-6 py-6 lg:px-10">
+                <header className="border-b border-line bg-surface px-6 py-6 lg:px-10">
 
                     <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
 
                         <div>
 
-                            <h1 className="m-0 text-3xl font-bold tracking-tight text-gray-900">
+                            <h1 className="m-0 text-3xl font-semibold tracking-tight text-heading">
                                 Resources
                             </h1>
 
-                            <p className="mt-1 text-sm text-gray-500">
+                            <p className="mt-1 text-sm text-muted">
                                 Your Impiricus information hub
                             </p>
 
@@ -444,7 +444,7 @@ function Sms() {
 
                         <div className="relative w-full xl:w-96">
 
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted">
                                 ⌕
                             </span>
 
@@ -455,7 +455,7 @@ function Sms() {
                                 onChange={(event) =>
                                     setSearch(event.target.value)
                                 }
-                                className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-11 pr-10 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:bg-white"
+                                className="w-full rounded-xl border border-line bg-canvas py-3 pl-11 pr-10 text-sm text-heading outline-none transition focus:border-accent focus:bg-surface"
                             />
 
                             {search && (
@@ -464,7 +464,7 @@ function Sms() {
                                     type="button"
                                     onClick={() => setSearch("")}
                                     aria-label="Clear search"
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-400 hover:text-gray-700"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-muted hover:text-ink"
                                 >
                                     ×
                                 </button>
@@ -478,7 +478,7 @@ function Sms() {
 
                         <div className="flex items-center gap-3">
 
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-mist text-sm font-semibold text-heading">
 
                                 {user.displayName
                                     ? user.displayName.charAt(0).toUpperCase()
@@ -488,11 +488,11 @@ function Sms() {
 
                             <div className="hidden xl:block">
 
-                                <p className="text-sm font-semibold text-gray-900">
+                                <p className="text-sm font-semibold text-heading">
                                     {user.displayName || "Healthcare Professional"}
                                 </p>
 
-                                <p className="text-xs text-gray-500">
+                                <p className="text-xs text-muted">
                                     HCP
                                 </p>
 
@@ -516,14 +516,14 @@ function Sms() {
 
                         <div className="flex flex-wrap items-center gap-3">
 
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className="text-sm font-medium text-ink">
                                 Show
                             </span>
 
 
                             {/* CONTENT TYPE */}
 
-                            <div className="flex rounded-lg border border-gray-200 bg-white p-1">
+                            <div className="flex rounded-lg border border-line bg-surface p-1">
 
                                 <button
                                     type="button"
@@ -532,8 +532,8 @@ function Sms() {
                                     }
                                     className={`rounded-md px-4 py-2 text-sm font-medium transition ${
                                         contentType === "all"
-                                            ? "bg-gray-900 text-white"
-                                            : "text-gray-600 hover:bg-gray-100"
+                                            ? "bg-ink text-surface"
+                                            : "text-muted hover:bg-mist"
                                     }`}
                                 >
                                     All
@@ -546,8 +546,8 @@ function Sms() {
                                     }
                                     className={`rounded-md px-4 py-2 text-sm font-medium transition ${
                                         contentType === "sms"
-                                            ? "bg-gray-900 text-white"
-                                            : "text-gray-600 hover:bg-gray-100"
+                                            ? "bg-ink text-surface"
+                                            : "text-muted hover:bg-mist"
                                     }`}
                                 >
                                     SMS
@@ -560,8 +560,8 @@ function Sms() {
                                     }
                                     className={`rounded-md px-4 py-2 text-sm font-medium transition ${
                                         contentType === "resource"
-                                            ? "bg-gray-900 text-white"
-                                            : "text-gray-600 hover:bg-gray-100"
+                                            ? "bg-ink text-surface"
+                                            : "text-muted hover:bg-mist"
                                     }`}
                                 >
                                     Resources
@@ -574,9 +574,9 @@ function Sms() {
 
                         {/* COUNT */}
 
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-muted">
 
-                            <span className="font-semibold text-gray-900">
+                            <span className="font-semibold text-ink">
                                 {totalResults}
                             </span>{" "}
 
@@ -593,23 +593,23 @@ function Sms() {
 
                     {loading && showSms ? (
 
-                        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center text-sm text-gray-500">
+                        <div className="rounded-2xl border border-line bg-surface p-12 text-center text-sm text-muted">
                             Loading messages...
                         </div>
 
                     ) : totalResults === 0 ? (
 
-                        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center">
+                        <div className="rounded-2xl border border-line bg-surface p-12 text-center">
 
                             <div className="mb-4 text-4xl">
                                 ✉
                             </div>
 
-                            <h2 className="mb-2 text-xl font-semibold text-gray-900">
+                            <h2 className="mb-2 text-xl font-semibold text-heading">
                                 No resources found
                             </h2>
 
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-muted">
                                 Try changing your search or filters.
                             </p>
 

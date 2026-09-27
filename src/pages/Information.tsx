@@ -131,16 +131,16 @@ function Information() {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50 px-6 py-8">
+        <div className="min-h-screen bg-canvas px-6 py-8">
             <div className="mx-auto max-w-7xl">
 
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-semibold text-gray-900">
+                    <h1 className="text-3xl font-semibold text-heading">
                         Information
                     </h1>
 
-                    <p className="mt-2 text-gray-500">
+                    <p className="mt-2 text-muted">
                         Relevant clinical updates, resources, and insights
                         personalized to your interests.
                     </p>
@@ -153,11 +153,11 @@ function Information() {
                     <section>
                         <div className="mb-4 flex items-center justify-between">
                             <div>
-                                <h2 className="text-xl font-semibold text-gray-900">
+                                <h2 className="text-xl font-semibold text-heading">
                                     Recommended for You
                                 </h2>
 
-                                <p className="mt-1 text-sm text-gray-500">
+                                <p className="mt-1 text-sm text-muted">
                                     Based on your specialty and recent
                                     engagement
                                 </p>
@@ -183,11 +183,11 @@ function Information() {
             {/* Detail modal */}
             {selectedItem && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-6"
                     onClick={() => setSelectedItem(null)}
                 >
                     <div
-                        className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl"
+                        className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-surface p-8 shadow-2xl"
                         onClick={(event) =>
                             event.stopPropagation()
                         }
@@ -195,15 +195,15 @@ function Information() {
                         {/* Modal header */}
                         <div className="mb-6 flex items-start justify-between gap-6">
                             <div>
-                                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+                                <span className="rounded-full bg-mist px-3 py-1 text-xs font-medium text-ink">
                                     {selectedItem.type}
                                 </span>
 
-                                <h2 className="mt-4 text-3xl font-semibold text-gray-900">
+                                <h2 className="mt-4 text-3xl font-semibold text-heading">
                                     {selectedItem.title}
                                 </h2>
 
-                                <p className="mt-2 text-sm text-gray-400">
+                                <p className="mt-2 text-sm text-muted">
                                     {selectedItem.source} ·{" "}
                                     {selectedItem.date}
                                 </p>
@@ -213,7 +213,7 @@ function Information() {
                                 onClick={() =>
                                     setSelectedItem(null)
                                 }
-                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-lg text-gray-500 transition hover:bg-gray-200 hover:text-gray-900"
+                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas text-lg text-muted transition hover:bg-mist hover:text-heading"
                                 aria-label="Close"
                             >
                                 ×
@@ -222,22 +222,22 @@ function Information() {
 
                         {/* Modal content */}
                         <div className="space-y-6">
-                            <p className="text-lg leading-8 text-gray-600">
+                            <p className="text-lg leading-8 text-ink">
                                 {selectedItem.summary}
                             </p>
 
                             <div>
-                                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                                <h3 className="mb-2 text-lg font-semibold text-heading">
                                     About this resource
                                 </h3>
 
-                                <p className="leading-7 text-gray-600">
+                                <p className="leading-7 text-ink">
                                     {selectedItem.content}
                                 </p>
                             </div>
 
                             <div>
-                                <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                                <h3 className="mb-3 text-lg font-semibold text-heading">
                                     Topics
                                 </h3>
 
@@ -245,7 +245,7 @@ function Information() {
                                     {selectedItem.tags.map((tag) => (
                                         <span
                                             key={tag}
-                                            className="rounded-full bg-gray-100 px-3 py-1.5 text-sm text-gray-600"
+                                            className="rounded-full bg-mist px-3 py-1.5 text-sm text-ink"
                                         >
                                             {tag}
                                         </span>

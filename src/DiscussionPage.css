@@ -3,10 +3,10 @@
 }
 
 .discussion-page {
-    height: 100vh;
+    height: calc(100vh - 64px);
     display: flex;
-    background: #f7f8fa;
-    color: #20242a;
+    background: #EEF3D8;
+    color: #2F3F41;
 }
 
 
@@ -15,31 +15,32 @@
 ========================= */
 
 .discussion-sidebar {
-    width: 360px;
+    width: 340px;
     flex-shrink: 0;
 
-    background: white;
-    border-right: 1px solid #e2e5e9;
+    background: #ffffff;
+    border-right: 1px solid #d5e4e2;
 
     display: flex;
     flex-direction: column;
 }
 
 .discussion-sidebar-header {
-    padding: 30px 26px 20px;
+    padding: 24px 22px 16px;
 }
 
 .discussion-sidebar-header h1 {
     margin: 0;
 
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
+    color: #2F3F41;
 }
 
 .discussion-sidebar-header p {
-    margin: 7px 0 0;
+    margin: 6px 0 0;
 
-    color: #8a919b;
+    color: #789E9E;
     font-size: 13px;
 }
 
@@ -49,7 +50,7 @@
 ========================= */
 
 .discussion-search {
-    margin: 0 22px 22px;
+    margin: 0 18px 16px;
 
     height: 42px;
 
@@ -60,16 +61,16 @@
 
     padding: 0 12px;
 
-    background: #f7f8fa;
+    background: #EEF3D8;
 
-    border: 1px solid #e1e4e8;
+    border: 1px solid #d5e4e2;
 
-    border-radius: 9px;
+    border-radius: 12px;
 }
 
 .discussion-search span {
-    font-size: 20px;
-    color: #858c96;
+    font-size: 18px;
+    color: #789E9E;
 }
 
 .discussion-search input {
@@ -81,6 +82,16 @@
     background: transparent;
 
     font-size: 13px;
+    color: #2F3F41;
+}
+
+.discussion-search:focus-within {
+    border-color: #FE615A;
+    background: #ffffff;
+}
+
+.discussion-search input:focus {
+    outline: none;
 }
 
 
@@ -91,13 +102,13 @@
 .discussion-list {
     overflow-y: auto;
 
-    padding: 0 14px 20px;
+    padding: 0 12px 20px;
 }
 
 .section-label {
     padding: 5px 12px 10px;
 
-    color: #9aa1aa;
+    color: #789E9E;
 
     font-size: 10px;
     font-weight: 700;
@@ -113,9 +124,9 @@
 
     text-align: left;
 
-    padding: 15px 13px;
+    padding: 14px 12px;
 
-    border-radius: 9px;
+    border-radius: 12px;
 
     cursor: pointer;
 
@@ -123,15 +134,15 @@
 }
 
 .discussion-item:hover {
-    background: #f5f6f8;
+    background: #EEF3D8;
 }
 
 .discussion-item.selected {
-    background: #eef2ff;
+    background: #B7D8D6;
 }
 
 .discussion-item-title {
-    color: #30353c;
+    color: #2F3F41;
 
     font-size: 13px;
 
@@ -142,7 +153,7 @@
 
 .discussion-item.selected
 .discussion-item-title {
-    color: #3856b4;
+    color: #2F3F41;
 }
 
 .discussion-item-info {
@@ -152,7 +163,7 @@
 
     margin-top: 7px;
 
-    color: #969da7;
+    color: #789E9E;
 
     font-size: 10px;
 }
@@ -162,7 +173,7 @@
 
     text-align: center;
 
-    color: #999;
+    color: #789E9E;
 
     font-size: 13px;
 }
@@ -187,13 +198,13 @@
 ========================= */
 
 .discussion-header {
-    min-height: 125px;
+    min-height: auto;
 
-    padding: 27px 38px;
+    padding: 20px 32px;
 
-    background: white;
+    background: #ffffff;
 
-    border-bottom: 1px solid #e2e5e9;
+    border-bottom: 1px solid #d5e4e2;
 
     display: flex;
 
@@ -203,7 +214,7 @@
 }
 
 .discussion-specialty {
-    color: #5269bc;
+    color: #789E9E;
 
     font-size: 10px;
 
@@ -213,21 +224,22 @@
 
     letter-spacing: 0.7px;
 
-    margin-bottom: 7px;
+    margin-bottom: 6px;
 }
 
 .discussion-header h2 {
     margin: 0;
 
-    font-size: 19px;
+    font-size: 18px;
 
     font-weight: 700;
+    color: #2F3F41;
 }
 
 .discussion-header p {
     margin: 6px 0 0;
 
-    color: #818893;
+    color: #789E9E;
 
     font-size: 12px;
 }
@@ -242,13 +254,23 @@
 .participants strong {
     font-size: 18px;
 
-    color: #414750;
+    color: #4D6466;
 }
 
 .participants span {
-    color: #9299a3;
+    color: #789E9E;
 
     font-size: 10px;
+}
+
+.discussion-error {
+    margin: 12px 32px 0;
+    padding: 10px 14px;
+    border: 1px solid #FE615A;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #FE615A;
+    font-size: 13px;
 }
 
 
@@ -261,28 +283,26 @@
 
     overflow-y: auto;
 
-    padding: 30px 42px;
+    padding: 24px 32px;
 
     display: flex;
 
     flex-direction: column;
 
-    gap: 18px;
+    gap: 14px;
 }
 
 .message {
-    max-width: 760px;
+    max-width: 72%;
+    align-self: flex-start;
 
-    background: white;
+    background: #ffffff;
 
-    border: 1px solid #e2e5e9;
+    border: 1px solid #d5e4e2;
 
-    border-radius: 11px;
+    border-radius: 18px 18px 18px 6px;
 
-    padding: 17px 19px;
-
-    box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.02);
+    padding: 14px 16px;
 }
 
 .message-header {
@@ -299,14 +319,14 @@
 
     border-radius: 50%;
 
-    background: #edf0f4;
+    background: #B7D8D6;
 
     display: flex;
 
     justify-content: center;
     align-items: center;
 
-    color: #68707c;
+    color: #2F3F41;
 
     font-size: 11px;
 
@@ -323,20 +343,22 @@
     font-size: 12px;
 
     font-weight: 650;
+
+    color: #2F3F41;
 }
 
 .message-time {
     margin-top: 2px;
 
-    color: #a0a6ae;
+    color: #789E9E;
 
     font-size: 9px;
 }
 
 .message-text {
-    margin-top: 13px;
+    margin-top: 10px;
 
-    color: #505761;
+    color: #2F3F41;
 
     font-size: 13px;
 
@@ -345,17 +367,45 @@
 
 
 /* =========================
+   MY MESSAGES
+========================= */
+
+.own-message {
+    margin-left: auto;
+    align-self: flex-end;
+    max-width: 72%;
+    background: #4D6466;
+    border-color: #4D6466;
+    border-radius: 18px 18px 6px 18px;
+}
+
+.own-message .avatar {
+    background: #B7D8D6;
+    color: #4D6466;
+}
+
+.own-message .message-name,
+.own-message .message-text {
+    color: #EEF3D8;
+}
+
+.own-message .message-time {
+    color: #B7D8D6;
+}
+
+
+/* =========================
    VERIFIED PHARMA
 ========================= */
 
 .verified-badge {
-    padding: 3px 6px;
+    padding: 3px 7px;
 
-    border-radius: 4px;
+    border-radius: 999px;
 
-    background: #f0f3ff;
+    background: #FE615A;
 
-    color: #4d63b2;
+    color: #ffffff;
 
     font-size: 9px;
 
@@ -363,17 +413,27 @@
 }
 
 .pharma-reply {
-    margin-left: 45px;
+    margin-left: 28px;
+    align-self: flex-start;
 
-    border-left: 3px solid #667bd0;
+    background: #ffffff;
 
-    background: #fafbff;
+    border: 1px solid #d5e4e2;
+
+    border-left: 3px solid #FE615A;
+
+    border-radius: 6px 18px 18px 18px;
 }
 
 .pharma-reply .avatar {
-    background: #e9edff;
+    background: #FE615A;
 
-    color: #5269bd;
+    color: #ffffff;
+}
+
+.pharma-reply .message-name,
+.pharma-reply .message-text {
+    color: #2F3F41;
 }
 
 
@@ -388,7 +448,7 @@
 
     background: transparent;
 
-    color: #5368b4;
+    color: #4D6466;
 
     font-size: 11px;
 
@@ -401,6 +461,7 @@
 
 .reply-button:hover {
     text-decoration: underline;
+    color: #FE615A;
 }
 
 .pharma-reply-composer {
@@ -408,15 +469,15 @@
 
     padding: 14px;
 
-    border-radius: 8px;
+    border-radius: 12px;
 
-    background: #f5f6fa;
+    background: #EEF3D8;
 }
 
 .pharma-label {
     margin-bottom: 8px;
 
-    color: #5267b5;
+    color: #4D6466;
 
     font-size: 10px;
 
@@ -430,9 +491,9 @@
 
     resize: vertical;
 
-    border: 1px solid #dce0e7;
+    border: 1px solid #d5e4e2;
 
-    border-radius: 7px;
+    border-radius: 10px;
 
     padding: 9px;
 
@@ -441,6 +502,14 @@
     font-size: 12px;
 
     outline: none;
+
+    background: #ffffff;
+
+    color: #2F3F41;
+}
+
+.pharma-reply-composer textarea:focus {
+    border-color: #FE615A;
 }
 
 .pharma-reply-composer button {
@@ -448,11 +517,11 @@
 
     border: none;
 
-    border-radius: 6px;
+    border-radius: 8px;
 
-    background: #5369ba;
+    background: #4D6466;
 
-    color: white;
+    color: #EEF3D8;
 
     padding: 8px 12px;
 
@@ -461,23 +530,27 @@
     cursor: pointer;
 }
 
+.pharma-reply-composer button:hover {
+    background: #789E9E;
+}
+
 
 /* =========================
    MESSAGE COMPOSER
 ========================= */
 
 .message-composer {
-    padding: 15px 38px 22px;
+    padding: 14px 32px 20px;
 
-    background: white;
+    background: #ffffff;
 
-    border-top: 1px solid #e2e5e9;
+    border-top: 1px solid #d5e4e2;
 }
 
 .anonymous-note {
     margin-bottom: 7px;
 
-    color: #9299a3;
+    color: #789E9E;
 
     font-size: 10px;
 }
@@ -485,7 +558,7 @@
 .anonymous-note span {
     margin-right: 5px;
 
-    color: #667bd0;
+    color: #FE615A;
 }
 
 .composer-row {
@@ -497,37 +570,51 @@
 .composer-row input {
     flex: 1;
 
-    height: 43px;
+    height: 44px;
 
-    border: 1px solid #dce0e5;
+    border: 1px solid #d5e4e2;
 
-    border-radius: 8px;
+    border-radius: 12px;
 
-    padding: 0 13px;
+    padding: 0 14px;
 
     outline: none;
 
-    font-size: 12px;
+    font-size: 13px;
+
+    background: #EEF3D8;
+
+    color: #2F3F41;
 }
 
 .composer-row input:focus {
-    border-color: #687dd0;
+    border-color: #FE615A;
+    background: #ffffff;
 }
 
 .composer-row button {
-    width: 45px;
+    width: 44px;
 
     border: none;
 
-    border-radius: 8px;
+    border-radius: 12px;
 
-    background: #5369ba;
+    background: #4D6466;
 
-    color: white;
+    color: #EEF3D8;
 
     font-size: 20px;
 
     cursor: pointer;
+}
+
+.composer-row button:hover {
+    background: #789E9E;
+}
+
+.composer-row button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 
@@ -547,37 +634,15 @@
 
     justify-content: center;
 
-    color: #8b929c;
+    color: #789E9E;
 }
 
 .select-discussion h2 {
-    color: #454b53;
+    color: #2F3F41;
 
     font-size: 18px;
 }
 
 .select-discussion p {
     font-size: 12px;
-}
-
-.own-message {
-    margin-left: auto;
-    max-width: 75%;
-    background: #eef4ff;
-    border-color: #d6e4ff;
-}
-
-.own-message .avatar {
-    background: #dbe8ff;
-    color: #3157a6;
-}
-
-.pharma-reply {
-    background: #f5f1ff;
-    border-color: #e4dcff;
-}
-
-.pharma-reply .avatar {
-    background: #e9e0ff;
-    color: #6842a5;
 }

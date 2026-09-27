@@ -15,17 +15,17 @@ function ResourceCard({
     resource,
 }: ResourceCardProps) {
     return (
-        <article className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md">
+        <article className="flex h-full flex-col rounded-2xl border border-line bg-surface p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-mist hover:shadow-md">
 
             {/* TOP */}
 
             <div className="mb-4 flex items-start justify-between gap-3">
 
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+                <span className="rounded-full bg-mist px-3 py-1 text-xs font-medium text-ink">
                     Resource
                 </span>
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-xl">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-mist text-xl">
                     📄
                 </div>
 
@@ -34,34 +34,34 @@ function ResourceCard({
 
             {/* CATEGORY */}
 
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
                 {resource.category}
             </p>
 
 
             {/* TITLE */}
 
-            <h2 className="mb-2 text-lg font-semibold leading-snug text-gray-900">
+            <h2 className="mb-2 text-lg font-semibold leading-snug text-heading">
                 {resource.title}
             </h2>
 
 
             {/* DESCRIPTION */}
 
-            <p className="mb-5 flex-1 text-sm leading-6 text-gray-500">
+            <p className="mb-5 flex-1 text-sm leading-6 text-ink">
                 {resource.description}
             </p>
 
 
             {/* BOTTOM */}
 
-            <div className="border-t border-gray-100 pt-4">
+            <div className="border-t border-line pt-4">
 
-                <p className="text-xs font-medium text-gray-700">
+                <p className="text-xs font-medium text-ink">
                     {resource.topic}
                 </p>
 
-                <p className="mt-1 text-xs text-gray-400">
+                <p className="mt-1 text-xs text-muted">
                     {resource.date}
                 </p>
 
