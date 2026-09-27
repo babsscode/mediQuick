@@ -50,21 +50,21 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-screen justify-center bg-[#B7D8D6] px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+        <div className="rounded-2xl border border-[#789E9E] bg-white p-8 shadow-sm">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="m-0 text-[24px] font-semibold tracking-tight text-[#4D6466]">
               Welcome back
             </h1>
 
-            <p className="mt-2 text-gray-500">
+            <p className="mt-2 text-[#789E9E]">
               Sign in to your account
             </p>
           </div>
 
           {error && (
-            <div className="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            <div className="mb-5 rounded-lg border border-[#FE615A] bg-white px-4 py-3 text-sm text-[#FE615A]">
               {error}
             </div>
           )}
@@ -73,7 +73,7 @@ export default function Login() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="mb-2 block text-sm font-medium text-[#4D6466]"
               >
                 Email
               </label>
@@ -86,22 +86,22 @@ export default function Login() {
                 placeholder="you@example.com"
                 autoComplete="email"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
               />
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-[#4D6466]"
                 >
                   Password
                 </label>
 
                 <button
                   type="button"
-                  className="text-sm text-blue-600 hover:text-blue-700"
+                  className="text-sm text-[#FE615A] hover:text-[#4D6466]"
                   onClick={() => {
                     // Add password reset functionality here.
                   }}
@@ -118,24 +118,24 @@ export default function Login() {
                 placeholder="Enter your password"
                 autoComplete="current-password"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg bg-[#4D6466] px-4 py-3 font-medium text-[#EEF3D8] transition hover:bg-[#789E9E] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-500">
+          <div className="mt-6 text-center text-sm text-[#789E9E]">
             Don't have an account?{" "}
             <a
               href="/register"
-              className="font-medium text-blue-600 hover:text-blue-700"
+              className="font-medium text-[#FE615A] hover:text-[#4D6466]"
             >
               Create one
             </a>

@@ -241,19 +241,19 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
+    <div className="flex min-h-screen justify-center bg-[#B7D8D6] px-4 py-12">
 
       <div className="w-full max-w-md">
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+        <div className="rounded-2xl border border-[#789E9E] bg-white p-8 shadow-sm">
 
           <div className="mb-8 text-center">
 
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="m-0 text-[24px] font-semibold tracking-tight text-[#4D6466]">
               Create an account
             </h1>
 
-            <p className="mt-2 text-gray-500">
+            <p className="mt-2 text-[#789E9E]">
               Create your Impiricus account
             </p>
 
@@ -261,7 +261,7 @@ export default function Register() {
 
 
           {error && (
-            <div className="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            <div className="mb-5 rounded-lg border border-[#FE615A] bg-white px-4 py-3 text-sm text-[#FE615A]">
               {error}
             </div>
           )}
@@ -278,7 +278,7 @@ export default function Register() {
 
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="mb-2 block text-sm font-medium text-[#4D6466]"
               >
                 Name
               </label>
@@ -293,7 +293,7 @@ export default function Register() {
                 placeholder="Your name"
                 autoComplete="name"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
               />
 
             </div>
@@ -305,7 +305,7 @@ export default function Register() {
 
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="mb-2 block text-sm font-medium text-[#4D6466]"
               >
                 Email
               </label>
@@ -320,7 +320,7 @@ export default function Register() {
                 placeholder="you@example.com"
                 autoComplete="email"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
               />
 
             </div>
@@ -332,7 +332,7 @@ export default function Register() {
 
               <label
                 htmlFor="role"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="mb-2 block text-sm font-medium text-[#4D6466]"
               >
                 Account type
               </label>
@@ -345,7 +345,7 @@ export default function Register() {
                     e.target.value as RegistrationRole
                   )
                 }
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
               >
 
                 <option value="hcp">
@@ -367,7 +367,7 @@ export default function Register() {
 
               <label
                 htmlFor="location"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="mb-2 block text-sm font-medium text-[#4D6466]"
               >
                 Location
               </label>
@@ -382,7 +382,7 @@ export default function Register() {
                 placeholder="City, State"
                 autoComplete="address-level2"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
               />
 
             </div>
@@ -394,7 +394,7 @@ export default function Register() {
 
               <label
                 htmlFor="specialty"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="mb-2 block text-sm font-medium text-[#4D6466]"
               >
                 {role === "hcp"
                   ? "Specialty"
@@ -414,7 +414,7 @@ export default function Register() {
                     : "e.g. Oncology"
                 }
                 required={requiresSpecialty}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
               />
 
             </div>
@@ -426,7 +426,7 @@ export default function Register() {
 
               <label
                 htmlFor="about"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="mb-2 block text-sm font-medium text-[#4D6466]"
               >
                 About
               </label>
@@ -443,10 +443,10 @@ export default function Register() {
                     : "Tell the community a little about yourself or your area of focus..."
                 }
                 rows={4}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 resize-none"
+                className="w-full resize-none rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
               />
 
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-[#789E9E]">
                 Optional
               </p>
 
@@ -460,7 +460,7 @@ export default function Register() {
 
                 <label
                   htmlFor="passcode"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="mb-2 block text-sm font-medium text-[#4D6466]"
                 >
                   Verification passcode
                 </label>
@@ -475,10 +475,10 @@ export default function Register() {
                   placeholder="Enter your passcode"
                   autoComplete="off"
                   required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="w-full rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
                 />
 
-                <p className="mt-2 text-xs text-gray-500">
+                <p className="mt-2 text-xs text-[#789E9E]">
                   Your email and passcode must be
                   approved before creating this account.
                 </p>
@@ -493,7 +493,7 @@ export default function Register() {
 
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="mb-2 block text-sm font-medium text-[#4D6466]"
               >
                 Password
               </label>
@@ -508,7 +508,7 @@ export default function Register() {
                 placeholder="Create a password"
                 autoComplete="new-password"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
               />
 
             </div>
@@ -520,7 +520,7 @@ export default function Register() {
 
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="mb-2 block text-sm font-medium text-[#4D6466]"
               >
                 Confirm password
               </label>
@@ -535,7 +535,7 @@ export default function Register() {
                 placeholder="Confirm your password"
                 autoComplete="new-password"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-[#789E9E] bg-[#EEF3D8] px-4 py-3 text-[#4D6466] outline-none transition focus:border-[#FE615A] focus:bg-white focus:ring-2 focus:ring-[#FE615A]"
               />
 
             </div>
@@ -546,7 +546,7 @@ export default function Register() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg bg-[#4D6466] px-4 py-3 font-medium text-[#EEF3D8] transition hover:bg-[#789E9E] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading
                 ? "Creating account..."
@@ -556,7 +556,7 @@ export default function Register() {
           </form>
 
 
-          <div className="mt-6 text-center text-sm text-gray-500">
+          <div className="mt-6 text-center text-sm text-[#789E9E]">
 
             Already have an account?{" "}
 
@@ -565,7 +565,7 @@ export default function Register() {
               onClick={() =>
                 navigate("/login")
               }
-              className="font-medium text-blue-600 hover:text-blue-700"
+              className="font-medium text-[#FE615A] hover:text-[#4D6466]"
             >
               Sign in
             </button>
