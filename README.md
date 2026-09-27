@@ -1,5 +1,4 @@
 # mediQuick
-## backend api: https://github.com/babsscode/mediQuick-api/tree/main
 
 ## Inspiration
 
