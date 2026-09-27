@@ -1,4 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import {
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
+
+import {
+    useSearchParams,
+} from "react-router-dom";
 
 import {
     collection,
@@ -16,9 +24,14 @@ import { db } from "../firebase/firestore";
 import { auth } from "../firebase/auth";
 
 import type { SmsMessage } from "../types";
+
 import SmsCard from "../components/SmsCard";
 import ResourceCard from "../components/ResourceCard";
 
+
+/* ============================================================
+   TYPES
+============================================================ */
 
 type Resource = {
     id: string;
@@ -43,37 +56,40 @@ type AiSearchResult = {
         | "sms"
         | "resource";
 
-    /*
-     * SMS fields
-     */
+    /* SMS fields */
     text?: string;
     link?: string;
     type?: string;
     createdAt?: unknown;
 
-    /*
-     * Resource fields
-     */
+    /* Resource fields */
     title?: string;
     description?: string;
     topic?: string;
     category?: string;
     date?: string;
 
-    /*
-     * Optional ranking information.
-     */
+    /* Ranking fields */
     score?: number;
     relevance?: number;
 };
 
+
+/* ============================================================
+   API
+============================================================ */
 
 const API_BASE_URL =
     import.meta.env.VITE_API_URL ||
     "http://localhost:8000";
 
 
+/* ============================================================
+   RESOURCES
+============================================================ */
+
 const sampleResources: Resource[] = [
+
     {
         id: "resource-1",
         title: "Treatment-Resistant Hypertension Guide",
@@ -83,6 +99,7 @@ const sampleResources: Resource[] = [
         category: "Clinical Guide",
         date: "Sep 24, 2026",
     },
+
     {
         id: "resource-2",
         title: "Heart Failure Treatment Overview",
@@ -92,6 +109,7 @@ const sampleResources: Resource[] = [
         category: "Clinical Resource",
         date: "Sep 23, 2026",
     },
+
     {
         id: "resource-3",
         title: "Cardiovascular Clinical Trials Directory",
@@ -101,6 +119,7 @@ const sampleResources: Resource[] = [
         category: "Clinical Trials",
         date: "Sep 21, 2026",
     },
+
     {
         id: "resource-4",
         title: "Patient Access & Coverage Guide",
@@ -110,6 +129,7 @@ const sampleResources: Resource[] = [
         category: "Patient Support",
         date: "Sep 20, 2026",
     },
+
     {
         id: "resource-5",
         title: "ACE Inhibitor Reference",
@@ -119,6 +139,7 @@ const sampleResources: Resource[] = [
         category: "Reference",
         date: "Sep 18, 2026",
     },
+
     {
         id: "resource-6",
         title: "Diabetes & Cardiovascular Health",
@@ -128,6 +149,7 @@ const sampleResources: Resource[] = [
         category: "Educational Resource",
         date: "Sep 17, 2026",
     },
+
     {
         id: "resource-7",
         title: "Hypertension Patient Discussion Guide",
@@ -137,6 +159,7 @@ const sampleResources: Resource[] = [
         category: "Patient Resource",
         date: "Sep 15, 2026",
     },
+
     {
         id: "resource-8",
         title: "Heart Failure Monitoring Checklist",
@@ -146,6 +169,7 @@ const sampleResources: Resource[] = [
         category: "Clinical Tool",
         date: "Sep 13, 2026",
     },
+
     {
         id: "resource-9",
         title: "Cardiovascular Prevention Reference",
@@ -155,6 +179,7 @@ const sampleResources: Resource[] = [
         category: "Reference",
         date: "Sep 11, 2026",
     },
+
     {
         id: "resource-10",
         title: "Specialist Referral & Care Coordination",
@@ -164,6 +189,7 @@ const sampleResources: Resource[] = [
         category: "Practice Resource",
         date: "Sep 9, 2026",
     },
+
     {
         id: "resource-11",
         title: "Blood Pressure Monitoring Guide",
@@ -173,6 +199,7 @@ const sampleResources: Resource[] = [
         category: "Clinical Tool",
         date: "Sep 8, 2026",
     },
+
     {
         id: "resource-12",
         title: "Cardiac Risk Assessment Reference",
@@ -182,6 +209,7 @@ const sampleResources: Resource[] = [
         category: "Reference",
         date: "Sep 7, 2026",
     },
+
     {
         id: "resource-13",
         title: "Heart Failure Patient Education",
@@ -191,6 +219,7 @@ const sampleResources: Resource[] = [
         category: "Patient Resource",
         date: "Sep 6, 2026",
     },
+
     {
         id: "resource-14",
         title: "Clinical Trial Eligibility Checklist",
@@ -200,6 +229,7 @@ const sampleResources: Resource[] = [
         category: "Clinical Tool",
         date: "Sep 5, 2026",
     },
+
     {
         id: "resource-15",
         title: "Managing Cardiovascular Risk in Diabetes",
@@ -209,6 +239,7 @@ const sampleResources: Resource[] = [
         category: "Clinical Resource",
         date: "Sep 4, 2026",
     },
+
     {
         id: "resource-16",
         title: "Medication Adherence Discussion Guide",
@@ -218,6 +249,7 @@ const sampleResources: Resource[] = [
         category: "Patient Resource",
         date: "Sep 3, 2026",
     },
+
     {
         id: "resource-17",
         title: "Hypertension Treatment Planning Tool",
@@ -227,6 +259,7 @@ const sampleResources: Resource[] = [
         category: "Clinical Tool",
         date: "Sep 2, 2026",
     },
+
     {
         id: "resource-18",
         title: "Cardiology Clinical Education Hub",
@@ -236,6 +269,7 @@ const sampleResources: Resource[] = [
         category: "Educational Resource",
         date: "Sep 1, 2026",
     },
+
     {
         id: "resource-19",
         title: "Care Coordination Best Practices",
@@ -245,6 +279,7 @@ const sampleResources: Resource[] = [
         category: "Practice Resource",
         date: "Aug 30, 2026",
     },
+
     {
         id: "resource-20",
         title: "Patient Conversation Starter Guide",
@@ -257,6 +292,10 @@ const sampleResources: Resource[] = [
 ];
 
 
+/* ============================================================
+   COMPONENT
+============================================================ */
+
 function Sms() {
 
     const [user, setUser] =
@@ -264,6 +303,9 @@ function Sms() {
 
     const [messages, setMessages] =
         useState<SmsMessage[]>([]);
+
+    const [searchParams] =
+        useSearchParams();
 
     const [search, setSearch] =
         useState("");
@@ -284,16 +326,33 @@ function Sms() {
         useState("");
 
 
-    /*
-     * Get current Firebase user.
-     */
+    /* ========================================================
+       READ SEARCH FROM URL
+    ======================================================== */
+
+    useEffect(() => {
+
+        const urlSearch =
+            searchParams.get("search") || "";
+
+        setSearch(urlSearch);
+
+    }, [searchParams]);
+
+
+    /* ========================================================
+       AUTHENTICATION
+    ======================================================== */
+
     useEffect(() => {
 
         const unsubscribe =
             onAuthStateChanged(
                 auth,
                 (currentUser) => {
+
                     setUser(currentUser);
+
                 }
             );
 
@@ -302,9 +361,10 @@ function Sms() {
     }, []);
 
 
-    /*
-     * Load this user's messages.
-     */
+    /* ========================================================
+       LOAD USER SMS
+    ======================================================== */
+
     useEffect(() => {
 
         if (!user) {
@@ -341,17 +401,25 @@ function Sms() {
 
                     const firebaseMessages =
                         snapshot.docs.map(
-                            (document) => ({
-                                id: document.id,
-                                ...document.data(),
-                            })
-                        ) as SmsMessage[];
+                            (document) => {
+
+                                const data =
+                                    document.data();
+
+                                return {
+                                    id: document.id,
+                                    ...data,
+                                } as SmsMessage;
+
+                            }
+                        );
 
                     setMessages(
                         firebaseMessages
                     );
 
                     setLoading(false);
+
                 },
                 (error) => {
 
@@ -361,6 +429,7 @@ function Sms() {
                     );
 
                     setLoading(false);
+
                 }
             );
 
@@ -369,9 +438,10 @@ function Sms() {
     }, [user]);
 
 
-    /*
-     * Basic local SMS search.
-     */
+    /* ========================================================
+       BASIC SMS SEARCH
+    ======================================================== */
+
     const filteredMessages =
         useMemo(() => {
 
@@ -385,10 +455,19 @@ function Sms() {
             }
 
             return messages.filter(
-                (message) =>
-                    message.text
+                (message) => {
+
+                    const text =
+                        message.text ||
+                        "";
+
+                    return text
                         .toLowerCase()
-                        .includes(searchLower)
+                        .includes(
+                            searchLower
+                        );
+
+                }
             );
 
         }, [
@@ -397,9 +476,10 @@ function Sms() {
         ]);
 
 
-    /*
-     * Basic local resource search.
-     */
+    /* ========================================================
+       BASIC RESOURCE SEARCH
+    ======================================================== */
+
     const filteredResources =
         useMemo(() => {
 
@@ -418,20 +498,29 @@ function Sms() {
                     return (
                         resource.title
                             .toLowerCase()
-                            .includes(searchLower) ||
+                            .includes(
+                                searchLower
+                            ) ||
 
                         resource.description
                             .toLowerCase()
-                            .includes(searchLower) ||
+                            .includes(
+                                searchLower
+                            ) ||
 
                         resource.topic
                             .toLowerCase()
-                            .includes(searchLower) ||
+                            .includes(
+                                searchLower
+                            ) ||
 
                         resource.category
                             .toLowerCase()
-                            .includes(searchLower)
+                            .includes(
+                                searchLower
+                            )
                     );
+
                 }
             );
 
@@ -440,24 +529,27 @@ function Sms() {
         ]);
 
 
-    /*
-     * Number of direct/basic matches.
-     */
+    /* ========================================================
+       DIRECT SEARCH COUNT
+    ======================================================== */
+
     const directResultCount =
         filteredMessages.length +
         filteredResources.length;
 
 
-    /*
-     * AI fallback search.
-     *
-     * Only call the API if the normal search
-     * cannot find anything.
-     */
+    /* ========================================================
+       AI FALLBACK SEARCH
+    ======================================================== */
+
     useEffect(() => {
 
         const searchText =
             search.trim();
+
+        /*
+         * No search.
+         */
 
         if (!searchText) {
 
@@ -468,9 +560,12 @@ function Sms() {
             return;
         }
 
+
         /*
-         * Basic search already found something.
+         * Basic search already found
+         * something.
          */
+
         if (directResultCount > 0) {
 
             setAiResults([]);
@@ -479,6 +574,12 @@ function Sms() {
 
             return;
         }
+
+
+        /*
+         * Wait until authentication
+         * has completed.
+         */
 
         if (!user) {
             return;
@@ -489,9 +590,9 @@ function Sms() {
 
 
         /*
-         * Wait 500ms after typing stops before
-         * calling the API.
+         * Debounce.
          */
+
         const timeoutId =
             window.setTimeout(
                 async () => {
@@ -503,11 +604,16 @@ function Sms() {
 
 
                         /*
-                         * Firebase authentication token.
+                         * Get Firebase token.
                          */
+
                         const token =
                             await user.getIdToken();
 
+
+                        /*
+                         * Call Python API.
+                         */
 
                         const response =
                             await fetch(
@@ -545,6 +651,7 @@ function Sms() {
                                 errorText ||
                                 `Search failed with status ${response.status}`
                             );
+
                         }
 
 
@@ -585,8 +692,13 @@ function Sms() {
                     } finally {
 
                         if (!cancelled) {
-                            setAiSearching(false);
+
+                            setAiSearching(
+                                false
+                            );
+
                         }
+
                     }
 
                 },
@@ -611,27 +723,23 @@ function Sms() {
     ]);
 
 
-    /*
-     * AI-ranked SMS results.
-     *
-     * IMPORTANT:
-     *
-     * We only return actual SmsMessage objects
-     * already loaded from Firestore.
-     *
-     * This avoids the previous TypeScript error.
-     */
+    /* ========================================================
+       AI SMS RESULTS
+       
+       IMPORTANT:
+       We don't cast the API result directly to SmsMessage.
+       We find the actual SmsMessage from Firebase instead.
+    ======================================================== */
+
     const aiMessages =
         useMemo(() => {
 
-            const results =
-                aiResults.filter(
+            return aiResults
+                .filter(
                     (result) =>
                         result.resultType ===
                         "sms"
-                );
-
-            return results
+                )
                 .map(
                     (result) =>
                         messages.find(
@@ -653,26 +761,22 @@ function Sms() {
         ]);
 
 
-    /*
-     * AI-ranked resources.
-     *
-     * We first find the resource in the existing
-     * sampleResources array.
-     *
-     * This means ResourceCard receives the exact
-     * Resource type it expects.
-     */
+    /* ========================================================
+       AI RESOURCE RESULTS
+       
+       Again, map the API result back to the
+       existing Resource object.
+    ======================================================== */
+
     const aiResources =
         useMemo(() => {
 
-            const results =
-                aiResults.filter(
+            return aiResults
+                .filter(
                     (result) =>
                         result.resultType ===
                         "resource"
-                );
-
-            return results
+                )
                 .map(
                     (result) =>
                         sampleResources.find(
@@ -693,23 +797,30 @@ function Sms() {
         ]);
 
 
-    /*
-     * When basic search has no matches, use
-     * the AI-ranked results.
-     */
+    /* ========================================================
+       CHOOSE DISPLAY RESULTS
+    ======================================================== */
+
+    const usingAiSearch =
+        search.trim() !== "" &&
+        directResultCount === 0;
+
+
     const displayedMessages =
-        directResultCount === 0 &&
-        search.trim() !== ""
+        usingAiSearch
             ? aiMessages
             : filteredMessages;
 
 
     const displayedResources =
-        directResultCount === 0 &&
-        search.trim() !== ""
+        usingAiSearch
             ? aiResources
             : filteredResources;
 
+
+    /* ========================================================
+       CONTENT FILTER
+    ======================================================== */
 
     const showSms =
         contentType === "all" ||
@@ -721,11 +832,18 @@ function Sms() {
         contentType === "resource";
 
 
-    const searching =
-        aiSearching &&
-        search.trim() !== "" &&
-        directResultCount === 0;
+    /* ========================================================
+       AI SEARCH STATE
+    ======================================================== */
 
+    const searching =
+        usingAiSearch &&
+        aiSearching;
+
+
+    /* ========================================================
+       RESULT COUNT
+    ======================================================== */
 
     const totalResults =
         (showSms
@@ -737,106 +855,139 @@ function Sms() {
             : 0);
 
 
-    /*
-     * User isn't signed in.
-     */
+    /* ========================================================
+       NOT AUTHENTICATED
+    ======================================================== */
+
     if (!user) {
 
         return (
-            <div className="login-message">
-                Please sign in to view your resources.
+            <div className="min-h-screen bg-gray-50">
+                <div className="mx-auto flex min-h-screen max-w-7xl items-center justify-center px-6">
+                    <div className="rounded-2xl border border-gray-200 bg-white px-8 py-10 text-center shadow-sm">
+                        <h2 className="text-lg font-semibold text-gray-900">
+                            Please sign in
+                        </h2>
+
+                        <p className="mt-2 text-sm text-gray-500">
+                            Please sign in to view your resources.
+                        </p>
+                    </div>
+                </div>
             </div>
         );
     }
 
 
+    /* ========================================================
+       UI
+    ======================================================== */
+
     return (
 
         <div className="min-h-screen bg-gray-50">
 
-            <main className="lg:ml-64">
+            {/* =================================================
+                MAIN CONTENT
 
-                {/* TOP BAR */}
+                IMPORTANT:
+                Removed lg:ml-64.
 
-                <header className="border-b border-gray-200 bg-white px-6 py-6 lg:px-10">
+                This is what was pushing the whole page
+                to the right.
+            ================================================== */}
 
-                    <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+            <main className="w-full">
 
-                        <div>
+                {/* =================================================
+                    TOP BAR
+                ================================================== */}
 
-                            <h1 className="m-0 text-3xl font-bold tracking-tight text-gray-900">
-                                Resources
-                            </h1>
+                <header className="border-b border-gray-200 bg-white">
 
-                            <p className="mt-1 text-sm text-gray-500">
-                                Your Impiricus information hub
-                            </p>
+                    <div className="mx-auto w-full max-w-7xl px-6 py-6 lg:px-8">
 
-                        </div>
+                        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
 
+                            {/* TITLE */}
 
-                        {/* SEARCH */}
+                            <div className="shrink-0">
 
-                        <div className="relative w-full xl:w-96">
+                                <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                                    Resources
+                                </h1>
 
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                ⌕
-                            </span>
-
-                            <input
-                                type="text"
-                                placeholder="Search resources..."
-                                value={search}
-                                onChange={(event) =>
-                                    setSearch(
-                                        event.target.value
-                                    )
-                                }
-                                className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-11 pr-10 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:bg-white"
-                            />
-
-                            {search && (
-
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setSearch("")
-                                    }
-                                    aria-label="Clear search"
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-400 hover:text-gray-700"
-                                >
-                                    ×
-                                </button>
-
-                            )}
-
-                        </div>
-
-
-                        {/* PROFILE */}
-
-                        <div className="flex items-center gap-3">
-
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">
-
-                                {user.displayName
-                                    ? user.displayName
-                                        .charAt(0)
-                                        .toUpperCase()
-                                    : "H"}
+                                <p className="mt-1 text-sm text-gray-500">
+                                    Your mediQuick information hub
+                                </p>
 
                             </div>
 
-                            <div className="hidden xl:block">
 
-                                <p className="text-sm font-semibold text-gray-900">
-                                    {user.displayName ||
-                                        "Healthcare Professional"}
-                                </p>
+                            {/* SEARCH */}
 
-                                <p className="text-xs text-gray-500">
-                                    HCP
-                                </p>
+                            <div className="relative w-full lg:max-w-xl">
+
+                                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                    ⌕
+                                </span>
+
+                                <input
+                                    type="text"
+                                    placeholder="Search resources..."
+                                    value={search}
+                                    onChange={(event) =>
+                                        setSearch(
+                                            event.target.value
+                                        )
+                                    }
+                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-11 pr-10 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:bg-white"
+                                />
+
+                                {search && (
+
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setSearch("")
+                                        }
+                                        aria-label="Clear search"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-400 transition hover:text-gray-700"
+                                    >
+                                        ×
+                                    </button>
+
+                                )}
+
+                            </div>
+
+
+                            {/* PROFILE */}
+
+                            <div className="flex shrink-0 items-center gap-3">
+
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">
+
+                                    {user.displayName
+                                        ? user.displayName
+                                            .charAt(0)
+                                            .toUpperCase()
+                                        : "H"}
+
+                                </div>
+
+                                <div className="hidden xl:block">
+
+                                    <p className="text-sm font-semibold text-gray-900">
+                                        {user.displayName ||
+                                            "Healthcare Professional"}
+                                    </p>
+
+                                    <p className="text-xs text-gray-500">
+                                        HCP
+                                    </p>
+
+                                </div>
 
                             </div>
 
@@ -847,29 +998,37 @@ function Sms() {
                 </header>
 
 
-                {/* CONTENT */}
+                {/* =================================================
+                    PAGE CONTENT
+                ================================================== */}
 
-                <div className="px-6 py-8 lg:px-10">
-
-
-                    {/* AI SEARCH STATUS */}
-
-                    {aiSearching &&
-                        search.trim() !== "" &&
-                        directResultCount === 0 && (
-
-                            <div className="mb-5 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-700">
-
-                                Searching your resources with AI...
-
-                            </div>
-
-                        )}
+                <div className="mx-auto w-full max-w-7xl px-6 py-8 lg:px-8">
 
 
-                    {aiSearchError !== "" && (
+                    {/* =================================================
+                        AI SEARCH STATUS
+                    ================================================== */}
 
-                        <div className="mb-5 rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+                    {searching && (
+
+                        <div className="mb-6 flex items-center gap-3 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-700">
+
+                            <span className="animate-pulse">
+                                ✨
+                            </span>
+
+                            <span>
+                                Finding relevant resources with AI...
+                            </span>
+
+                        </div>
+
+                    )}
+
+
+                    {aiSearchError && (
+
+                        <div className="mb-6 rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
 
                             {aiSearchError}
 
@@ -878,9 +1037,11 @@ function Sms() {
                     )}
 
 
-                    {/* FILTER BAR */}
+                    {/* =================================================
+                        FILTER BAR
+                    ================================================== */}
 
-                    <section className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <section className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
                         <div className="flex flex-wrap items-center gap-3">
 
@@ -908,6 +1069,7 @@ function Sms() {
                                     All
                                 </button>
 
+
                                 <button
                                     type="button"
                                     onClick={() =>
@@ -924,6 +1086,7 @@ function Sms() {
                                 >
                                     SMS
                                 </button>
+
 
                                 <button
                                     type="button"
@@ -947,7 +1110,7 @@ function Sms() {
                         </div>
 
 
-                        {/* COUNT */}
+                        {/* RESULT COUNT */}
 
                         <div className="text-sm text-gray-500">
 
@@ -961,8 +1124,7 @@ function Sms() {
 
                             {searching
                                 ? "searching"
-                                : totalResults ===
-                                    1
+                                : totalResults === 1
                                     ? "result"
                                     : "results"}
 
@@ -971,45 +1133,60 @@ function Sms() {
                     </section>
 
 
-                    {/* CONTENT */}
+                    {/* =================================================
+                        LOADING
+                    ================================================== */}
 
                     {loading && showSms ? (
 
-                        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center text-sm text-gray-500">
-                            Loading messages...
+                        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-sm">
+
+                            <div className="text-sm text-gray-500">
+                                Loading messages...
+                            </div>
+
                         </div>
 
                     ) : searching ? (
 
-                        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center">
+                        /* =================================================
+                           AI SEARCHING
+                        ================================================== */
+
+                        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-sm">
 
                             <div className="mb-4 text-4xl">
                                 ✨
                             </div>
 
-                            <h2 className="mb-2 text-xl font-semibold text-gray-900">
+                            <h2 className="text-xl font-semibold text-gray-900">
                                 Finding relevant resources
                             </h2>
 
-                            <p className="text-sm text-gray-500">
-                                Searching your resources using semantic matching...
+                            <p className="mt-2 text-sm text-gray-500">
+                                Searching your SMS messages and resources
+                                using semantic matching...
                             </p>
 
                         </div>
 
                     ) : totalResults === 0 ? (
 
-                        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center">
+                        /* =================================================
+                           NO RESULTS
+                        ================================================== */
+
+                        <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-sm">
 
                             <div className="mb-4 text-4xl">
-                                ✉
+                                🔎
                             </div>
 
-                            <h2 className="mb-2 text-xl font-semibold text-gray-900">
+                            <h2 className="text-xl font-semibold text-gray-900">
                                 No resources found
                             </h2>
 
-                            <p className="text-sm text-gray-500">
+                            <p className="mt-2 text-sm text-gray-500">
                                 Try changing your search or filters.
                             </p>
 
@@ -1017,9 +1194,15 @@ function Sms() {
 
                     ) : (
 
+                        /* =================================================
+                           RESULTS
+                        ================================================== */
+
                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
 
-                            {/* SMS */}
+                            {/* =================================================
+                                SMS RESULTS
+                            ================================================== */}
 
                             {showSms &&
                                 displayedMessages.map(
@@ -1034,14 +1217,16 @@ function Sms() {
                                 )}
 
 
-                            {/* RESOURCES */}
+                            {/* =================================================
+                                RESOURCE RESULTS
+                            ================================================== */}
 
                             {showResources &&
                                 displayedResources.map(
                                     (resource) => (
 
                                         <ResourceCard
-                                            key={resource.id}
+                                            key={`resource-${resource.id}`}
                                             resource={resource}
                                         />
 

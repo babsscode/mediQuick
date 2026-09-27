@@ -49,7 +49,7 @@ function Navbar() {
 
                 {/* LOGO */}
                 <div className="text-xl font-bold tracking-tight text-[#EEF3D8]">
-                    IMPIRICUS
+                    mediQuick
                 </div>
 
                 {/* NAVIGATION */}
@@ -82,13 +82,6 @@ function Navbar() {
                         className={navClass}
                     >
                         Discussion
-                    </NavLink>
-
-                    <NavLink
-                        to="/app/information"
-                        className={navClass}
-                    >
-                        Information
                     </NavLink>
                 </div>
 

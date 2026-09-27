@@ -15,7 +15,7 @@ const recommendedQuestions = [
             "What patient access challenges are other cardiologists discussing in Georgia?",
     },
     {
-        category: "Based on your Pulse activity",
+        category: "Based on your activity",
         question:
             "What are HCPs discussing about heart failure treatment sequencing?",
     },
@@ -89,32 +89,39 @@ function Dashboard() {
     }
 
     function handleDiscussion() {
-        if (!searchedQuestion) {
-            return;
-        }
-
-        navigate(
-            `/app/discussion?search=${encodeURIComponent(
-                searchedQuestion
-            )}`
-        );
+    if (!searchedQuestion.trim()) {
+        return;
     }
 
+    navigate(
+        `/app/discussion?search=${encodeURIComponent(
+            searchedQuestion.trim()
+        )}`
+    );
+}
+
     function handlePeerConnect() {
-        if (!searchedQuestion) {
+        if (!searchedQuestion.trim()) {
             return;
         }
 
         navigate(
             `/app/peer-connect?question=${encodeURIComponent(
-                searchedQuestion
+                searchedQuestion.trim()
             )}`
         );
     }
 
     function handleResources() {
-        navigate("/app/sms");
+    if (!searchedQuestion) {
+        return;
     }
+
+    navigate(
+        `/app?search=${encodeURIComponent(searchedQuestion)}`
+    );
+}
+
 
     function handleMsl() {
         setShowMslModal(true);
@@ -283,7 +290,7 @@ function Dashboard() {
                                 </h3>
 
                                 <p className="mt-2 text-sm leading-6 text-gray-500">
-                                    Find relevant Impiricus
+                                    Find relevant mediQuick
                                     resources and information
                                     for your question.
                                 </p>
@@ -370,7 +377,7 @@ function Dashboard() {
                 <section className="mt-10">
                     <div className="mb-5">
                         <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
-                            Your Specialty Pulse
+                            Your Specialty
                         </p>
 
                         <h2 className="mt-1 text-2xl font-semibold text-gray-900">

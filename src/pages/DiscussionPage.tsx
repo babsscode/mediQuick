@@ -1,4 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import {
+    useSearchParams,
+} from "react-router-dom";
 
 import {
     collection,
@@ -80,8 +83,13 @@ function DiscussionPage() {
     const [messages, setMessages] =
         useState<DiscussionMessage[]>([]);
 
-    const [search, setSearch] =
-        useState("");
+   const [searchParams] = useSearchParams();
+
+const initialSearch =
+    searchParams.get("search") || "";
+
+const [search, setSearch] =
+    useState(initialSearch);
 
     const [aiResults, setAIResults] =
         useState<Discussion[]>([]);

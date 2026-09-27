@@ -11,7 +11,7 @@ const sampleResources: Resource[] = [
             "A new clinical update covering emerging approaches to treatment-resistant hypertension.",
         topic: "Hypertension",
         date: "Sep 25, 2026",
-        sender: "Impiricus",
+        sender: "mediQuick",
     },
 
     {
@@ -22,7 +22,7 @@ const sampleResources: Resource[] = [
             "Explore information about treatment sequencing and recent approaches to heart failure management.",
         topic: "Heart Failure",
         date: "Sep 24, 2026",
-        sender: "Impiricus",
+        sender: "mediQuick",
     },
 
     {
@@ -33,7 +33,7 @@ const sampleResources: Resource[] = [
             "A cardiovascular clinical trial is currently enrolling patients at participating sites.",
         topic: "Clinical Trials",
         date: "Sep 23, 2026",
-        sender: "Impiricus",
+        sender: "mediQuick",
     },
 
     {
@@ -44,7 +44,7 @@ const sampleResources: Resource[] = [
             "New resources are available to help HCPs navigate patient access and coverage questions.",
         topic: "Patient Access",
         date: "Sep 22, 2026",
-        sender: "Impiricus",
+        sender: "mediQuick",
     },
 
     {
@@ -55,7 +55,7 @@ const sampleResources: Resource[] = [
             "Review updated clinical information related to ACE inhibitor treatment and cardiovascular prevention.",
         topic: "ACE Inhibitors",
         date: "Sep 20, 2026",
-        sender: "Impiricus",
+        sender: "mediQuick",
     },
 
     {
@@ -66,7 +66,7 @@ const sampleResources: Resource[] = [
             "Learn more about the relationship between diabetes management and cardiovascular risk.",
         topic: "Diabetes",
         date: "Sep 19, 2026",
-        sender: "Impiricus",
+        sender: "mediQuick",
     },
 
     {
@@ -77,7 +77,7 @@ const sampleResources: Resource[] = [
             "A Medical Science Liaison may be available to discuss scientific questions related to cardiovascular care.",
         topic: "MSL Support",
         date: "Sep 18, 2026",
-        sender: "Impiricus",
+        sender: "mediQuick",
     },
 
     {
@@ -88,7 +88,7 @@ const sampleResources: Resource[] = [
             "New patient education resources are available for discussions around heart failure management.",
         topic: "Heart Failure",
         date: "Sep 16, 2026",
-        sender: "Impiricus",
+        sender: "mediQuick",
     },
 
     {
@@ -99,7 +99,7 @@ const sampleResources: Resource[] = [
             "Review recent information related to hypertension guidelines and blood pressure management.",
         topic: "Hypertension",
         date: "Sep 14, 2026",
-        sender: "Impiricus",
+        sender: "mediQuick",
     },
 
     {
@@ -110,7 +110,7 @@ const sampleResources: Resource[] = [
             "A new educational series covering cardiovascular disease, prevention, and treatment is now available.",
         topic: "Cardiology",
         date: "Sep 12, 2026",
-        sender: "Impiricus",
+        sender: "mediQuick",
     },
 
     // ========================================================

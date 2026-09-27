@@ -14,7 +14,6 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Sms from "../pages/Sms";
 import DiscussionPage from "../pages/DiscussionPage";
-import InformationPage from "../pages/Information";
 import PeerConnect from "../pages/PeerConnect";
 import Dashboard from "../pages/Dashboard";
 import Navbar from "../components/Navbar";
@@ -170,13 +169,7 @@ function App() {
                         />
 
 
-                        {/* INFORMATION */}
-
-                        <Route
-                            path="/app/information"
-                            element={<InformationPage />}
-                        />
-
+                        
                         <Route
                             path="/app/peer-connect"
                             element={<PeerConnect />}
